@@ -1,7 +1,7 @@
 /*
+    File:   player.js
     Author: necorice
     Date:   2014/7/29
-    Name:   Cocos2d-js v3.0 final
     license: MIT
 */
 var Player = cc.Sprite.extend({
@@ -53,12 +53,10 @@ var Player = cc.Sprite.extend({
     //sprite 必备的特性
 
   }，
-  check:function(magic){
-    if(magic.tp == this.won_tp){
-        return 1;
-      }else if(magic.tp == this.tp){
-        return 0
-      }
-      return -1;
-  },
 })
+
+
+
+
+
+
