@@ -1,14 +1,17 @@
 /*
     File: action.js
     Author: necorice
-    Date:   2015/7/29
+    Date:   2015/7/28
     license: MIT
 */
 
 
 NomalCollide = cc.Class.extend({
+  rect:null,
   ctor:function (s) {
-    this._super(s);
+    if(this._super){
+      this._super(s);
+    } 
     //come from 2.x
     this.init(s);
   },
@@ -16,12 +19,12 @@ NomalCollide = cc.Class.extend({
     this.rect = s;
   },   
   collide:function(rect){
-    if(their rect in myrect){
+    /*if(their rect in myrect){
       return true;
     }  
     else{
       return false;
-    }
+    }*/
   },
   collide_rect:function(center){
     return rect;
@@ -42,5 +45,5 @@ EmptyCollide = NomalCollide.extend({
 
 
 //单元测试方法
+//Jusmine
 
-//ClassicMove = cc.Class.

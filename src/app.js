@@ -26,8 +26,8 @@ var Battle = cc.Layer.extend({
     helloImg:null,
     helloLabel:null,
     circle:null,
-    walk_prefix:"data_character_yuyuko_walkFront0",
-    back_prefix:"data_character_yuyuko_walkBack0",
+    /*walk_prefix:"data_character_yuyuko_walkFront0",
+    back_prefix:"data_character_yuyuko_walkBack0",*/
     sprite:null,
     //start index
     spriteFrameIndex:0,
@@ -38,13 +38,13 @@ var Battle = cc.Layer.extend({
         this._super();
 
         var size = cc.director.getWinSize();
-        //maybe 问题之所在
-        cc.director.setProjection(cc.DIRECTOR_PROJECTION_2D);
-        
+        //maybe 
+        //cc.director.setProjection(cc.DIRECTOR_PROJECTION_2D);
+        cc.director.setProjection(cc.Director.PROJECTION_2D);
 
-        this.helloLabel = cc.LabelTTF.create("Hello World", "Arial", 38);
+        //this.helloLabel = cc.LabelTTF.create("Hello World", "Arial", 38);
         // position the label on the center of the screen
-        this.helloLabel.setPosition(size.width / 2, 0);
+        //this.helloLabel.setPosition(size.width / 2, 0);
         // add the label as a child to this layer
         //this.addChild(this.helloLabel, 5);
         
@@ -56,7 +56,7 @@ var Battle = cc.Layer.extend({
         //this.setKeyboardEnabled(true);
 
         //playmusic
-        cc.audioEngine.playMusic(res.bgm, true);
+        //cc.audioEngine.playMusic(res.bgm, true);
 
         //add background image
         var back = new cc.Sprite(res.background);
@@ -70,11 +70,6 @@ var Battle = cc.Layer.extend({
         this._tileMap = tileMap;
         this.addChild(this._tileMap, 1, 0);
 
-
-
-        //this.sprite = new player_uuz();
-        //this.sprite._tmx = this._tileMap;
-        //this.addChild(this.sprite, this.sprite.zOrder);
         
         this.scheduleUpdate();
         this.schedule(this.update);
@@ -99,44 +94,27 @@ var Battle = cc.Layer.extend({
         var pleft = array[1];
        
 
-        //test 骨骼动画
-        //manager 管理 预加载
-        armatureDataManager= ccs.armatureDataManager;
-        //load json
-        //add plist and png in resource.js
-        armatureDataManager.addArmatureFileInfo(res.kumarun);
-        armatureDataManager.addArmatureFileInfo(res.kumaswing);
-        //see name in json
-        //return ccs.ArmatureAnimation
-        var armature = ccs.Armature.create("kumarun");
-        var kumaswing = ccs.Armature.create("swing");
-        //see action
-        //armature.getAnimation().playWithIndex(2);
-        armature.getAnimation().play('run');
-        kumaswing.getAnimation().play('swing');
-        //armature.stop()
-        //armature.pause()
-        armature.x = objX;
-        armature.y = objY;
-
-        kumaswing.x = pleft["x"]
-        kumaswing.y = pleft["y"]
-        kumaswing.scale = 0.6;
-        //armature.scale = 0.6;
-        armature.setZOrder(999);
-        //反向
-        armature.setScaleX(-0.6);
-        armature.scaleY = 0.6
-        this.addChild(armature); 
-        this.addChild(kumaswing);
 
 
 
+        this.player = new Player(cc.p(objX,objY));
+        //this.player.x = objX
+        //this.player.y = objY + 30
+        
+        this.addChild(this.player);
+
+        this.init_lisener();
+        this.upon_tile(this._tileMap)
+
+        return true;
+    },
+    init_lisener:function(){
         //键盘监听
         var self = this;
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:function(keyCode, event){
+                self.player.handleKey(keyCode);
                 self.onKeyDown(keyCode);
             },
             onKeyReleased: function(keyCode, event){
@@ -151,12 +129,8 @@ var Battle = cc.Layer.extend({
                     cc.log('press menu')
                 }
             }
-        }, this); 
+        }, this);       
 
-        
-        this.upon_tile(this._tileMap)
-
-        return true;
     },
     upon_tile:function(tilemap){
         /*
@@ -233,12 +207,12 @@ var Battle = cc.Layer.extend({
         //sprite.update
         //设定每一帧
         //this.sprite.update(dt);
-
+        this.player.update(dt);
     },
     //for key
     onKeyDown:function(e){
        //handle sprit move
-       this.sprite.handleKey(e);
+       //this.sprite.handleKey(e);
        g_var.KEYS[e] = true;
        /*
        if(e == cc.KEY.left || e == cc.KEY.right){

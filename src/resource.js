@@ -23,7 +23,7 @@ var res = {
     background:'res/back.jpg',
 
     //music
-    bgm:'res/music/TERRITORY.mp3',
+    //bgm:'res/music/TERRITORY.mp3',
 
     //tilemap
     map:'res/mario.tmx',
