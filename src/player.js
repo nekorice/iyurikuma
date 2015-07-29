@@ -7,9 +7,11 @@
 var Player = cc.Sprite.extend({
   act:{},
   animate:null,
-  speed:500,
+  speed:125,
   last_dt:0,
   dt:0,
+  boxWidth:50,
+  boxHeight:50,
   ctor:function (p) {
     this._super();
     //come from 2.x
@@ -18,16 +20,15 @@ var Player = cc.Sprite.extend({
   init:function(p){
     //init 动画
     this.initAnimation();
-
     this.idle();
     //idle 动画  和 move动画
     //切换动画
 
     //add a action
     //添加一个行为
-    //移动 不一定会碰撞
+    //移动 碰撞
     //切换行为 改变表现
-
+    
     this.collide = new NomalCollide(1)
     
     this.setPosition(p);
@@ -36,17 +37,13 @@ var Player = cc.Sprite.extend({
     this.handle = new TestMove(p, this.speed)
     //this.bullet = PlayerBullet
     
-
+    //animation 和状态机绑定
     //state 状态机
     // -- state --> animation  action
     //状态 对应的判断，动画 
     //不同状态切换 行为？
     //move  jump  idle attack hit
     //specilaction
-
-    //抽象
-    
-
 
   },
   initAnimation:function(){
@@ -134,7 +131,14 @@ var Player = cc.Sprite.extend({
 
   },
   collide_rect:function(){
-
+    //包围盒
+    //this.boundbox = new cc.rect(p.x, p.y, this.width, this.height);
+  },
+  collide_ground:function(tiles){
+    //get tiles
+    var tpos = TilesHelper.getTilesPos(tiles, this.getPosition());
+    var ground = TilesHelper.getGround(tiles, tpos[1]);
+    return ground
   },
   collide:function(){
 
@@ -146,8 +150,9 @@ var Player = cc.Sprite.extend({
     //在状态机中定义
     if(this.state != 'idle'){
       this.last_dt += dt;
-      if(this.last_dt > 1.5){
+      if(this.last_dt > 1.25){
         this.idle();
+        this.handle.stopmove();
         this.last_dt = 0;
       }   
     }else{
@@ -156,13 +161,20 @@ var Player = cc.Sprite.extend({
     
     //this.handleKey();
 
-    //move时间 才能平滑
-    //惯性处理  加速度 减速度
     //跑酷 不一定需要移动
-    var pos = this.handle.move(dt);
+    
+    //get 地面高度
+    var ground_hight = this.collide_ground();
+
+    var pos = this.handle.move(dt, ground_hight);
     //cc.log(pos);
     this.setPosition(pos);
     //update position
+
+    if(g_var.DEBUG){
+      //draw boundbox
+
+    }
 
   }
 })

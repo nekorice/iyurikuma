@@ -94,17 +94,19 @@ var Battle = cc.Layer.extend({
         var pleft = array[1];
        
 
-
-
-
-        this.player = new Player(cc.p(objX,objY));
+        this.player = new Player(cc.p(objX,objY+200));
         //this.player.x = objX
         //this.player.y = objY + 30
         
         this.addChild(this.player);
 
         this.init_lisener();
-        this.upon_tile(this._tileMap)
+        this.upon_tile(this._tileMap);
+
+        //scene 
+        //story scene && menu
+        //battle scene && menu
+        //menu scene
 
         return true;
     },

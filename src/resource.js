@@ -44,6 +44,8 @@ var g_var = {
   'KEYS' : [],
   'horizon':100,
   'gravity':50,
+  'PIXMIN':10,
+  'DEBUG':true
 }
 
 //这里在preload使用用来提前载入资源
