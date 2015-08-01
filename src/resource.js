@@ -43,7 +43,7 @@ var g_var = {
   'player_zorder':2,
   'KEYS' : [],
   'horizon':100,
-  'gravity':50,
+  'gravity':10,
   'PIXMIN':10,
   'DEBUG':true
 }

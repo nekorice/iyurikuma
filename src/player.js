@@ -120,6 +120,9 @@ var Player = cc.Sprite.extend({
       this.handle.forword();
     }else if(key == cc.KEY.left ){
       this.handle.backword();
+    }else if(key == cc.KEY.x){
+      console.log('jump')
+      this.handle.dojump();
     }else{
       
     }

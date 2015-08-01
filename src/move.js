@@ -11,6 +11,7 @@ ClassicMove = cc.Class.extend({
   x_op:0,
   y_op:0,
   per_speed:30,
+  jump_speed:150,
   ctor:function (pos, sp) {
     if(this._super){
       this._super(pos, sp);
@@ -26,6 +27,7 @@ ClassicMove = cc.Class.extend({
     this.max_speed = speed;
     this.jump = false;
     this.speed = 0;
+    this.speed_y = 0;
     this.gravity = g_var.gravity
     this.run = false;
   },
@@ -53,10 +55,17 @@ ClassicMove = cc.Class.extend({
   },
   move:function(dt, ground){
     this.pos.x = this.pos.x + this.speed * dt
+    this.pos.y = this.pos.y + this.speed_y * dt
+  
     //need collide
-    
-    if(this.pos.y > ground + g_var.PIXMIN ||  this.pos.y < ground - g_var.PIXMIN){
-      this.pos.y = this.pos.y - this.gravity * dt
+    //有grond的不会小于ground
+    //没有ground把 ground 置于复数
+    if(this.pos.y > ground){ 
+      this.pos.y = this.pos.y - this.gravity * dt;
+    }else{
+      this.pos.y = ground;
+      this.speed_y = 0;
+      this.jump = 0;
     }
     
     
@@ -71,14 +80,23 @@ ClassicMove = cc.Class.extend({
       //15接近冰块
       this.speed = this.speed - (this.speed / 2)
     }
+    
+    //设定下落速度极限 为jump值
+    if(this.speed_y > -this.jump_speed){
+      this.speed_y = this.speed_y - this.gravity
+    }
+    
     return this.pos
   },
   stopmove:function(dt){
     this.run = false;
   },
-  jump:function(dt){
-    if(!this.jump){
+  dojump:function(dt){
+    if(this.jump <= 1){
       //do jump
+      this.speed_y = 400;
+      //二段跳得设置
+      this.jump += 1;
     }
     return this.pos
   }
