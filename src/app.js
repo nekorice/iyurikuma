@@ -23,23 +23,16 @@
 
 var Battle = cc.Layer.extend({
     isMouseDown:false,
-    helloImg:null,
-    helloLabel:null,
-    circle:null,
-    /*walk_prefix:"data_character_yuyuko_walkFront0",
-    back_prefix:"data_character_yuyuko_walkBack0",*/
     sprite:null,
     //start index
     spriteFrameIndex:0,
 
     init:function () {
-        //////////////////////////////
-        // 1. super init first
+
         this._super();
 
         var size = cc.director.getWinSize();
-        //maybe 
-        //cc.director.setProjection(cc.DIRECTOR_PROJECTION_2D);
+        //maybe some problem
         cc.director.setProjection(cc.Director.PROJECTION_2D);
 
         //this.helloLabel = cc.LabelTTF.create("Hello World", "Arial", 38);
@@ -64,24 +57,26 @@ var Battle = cc.Layer.extend({
         back.setScale(1.5);
         this.addChild(back);
 
+        
+        //
+        //Map
+        this.map = new Map();
+        this.addChild(this.map);
+
         //tiled map test
         //tiled map 有1像素的bug 需要多留一个像素 比如32px 填写31px 边框0 设置间距1
-        var tileMap = cc.TMXTiledMap.create(res.map);
-        this._tileMap = tileMap;
-        this.addChild(this._tileMap, 1, 0);
-
-        
-        this.scheduleUpdate();
-        this.schedule(this.update);
+        //var tileMap = cc.TMXTiledMap.create(res.map);
+        //this._tileMap = tileMap;
+        //this.addChild(this._tileMap, 1, 0);
 
         //从tilemap上读取信息
 
         // 获得对象层
-        
-        var objectLayer = tileMap.getObjectGroup("player");
+        var objectLayer = this.map.current_map.getObjectGroup("player");
         var array = objectLayer.getObjects();
 
         //获得对象的点
+        //只能够获得数组 需要用name来区分
         var spawnPoint = array[0];
         var objX = spawnPoint["x"];
         var objY = spawnPoint["y"];
@@ -90,14 +85,10 @@ var Battle = cc.Layer.extend({
         cc.log(spawnPoint["name"])
         cc.log(objX);
         cc.log(objY);
-
-        var pleft = array[1];
+        //var pleft = array[1];
        
-
+        //200 -> test
         this.player = new Player(cc.p(objX,objY+200));
-        //this.player.x = objX
-        //this.player.y = objY + 30
-        
         this.addChild(this.player);
 
         this.init_lisener();
@@ -107,6 +98,9 @@ var Battle = cc.Layer.extend({
         //story scene && menu
         //battle scene && menu
         //menu scene
+
+        this.scheduleUpdate();
+        this.schedule(this.update);
 
         return true;
     },
@@ -183,8 +177,6 @@ var Battle = cc.Layer.extend({
         //done
         if(properties != undefined)
             cc.log(properties["collide"] == 1);
-        //return 
-        //if return true
     },
     // a selector callback
     menuCloseCallback:function (sender) {
@@ -210,52 +202,14 @@ var Battle = cc.Layer.extend({
         //设定每一帧
         //this.sprite.update(dt);
         this.player.update(dt);
-    },
-    //for key
-    onKeyDown:function(e){
-       //handle sprit move
-       //this.sprite.handleKey(e);
-       g_var.KEYS[e] = true;
-       /*
-       if(e == cc.KEY.left || e == cc.KEY.right){
-            
-            var prevPrefix = this.spriteFrameNamePrefix;
-            if(e == cc.KEY.left)
-                this.spriteFrameNamePrefix = this.back_prefix;
-            else
-                this.spriteFrameNamePrefix = this.walk_prefix;
-            if(prevPrefix !== this.spriteFrameNamePrefix)
-                this.spriteFrameIndex = 0;
-            
 
-            if(this.spriteFrameIndex > 5)
-                this.spriteFrameIndex = 0;
-            var indexAsString;
-            if(this.spriteFrameIndex < 10)
-                indexAsString = "0" + this.spriteFrameIndex.toString();
-            else
-                indexAsString = this.spriteFrameIndex.toString();
+        //map update dt
+        this.map.update(dt);
 
-            this.removeChild(this.sprite);
-            this.sprite  = cc.Sprite.createWithSpriteFrameName(
-                this.spriteFrameNamePrefix + indexAsString + ".png"
-            );
 
-            this.sprite.setPosition(new cc.Point(300,300));
-            this.sprite.setScale(1);
-            this.addChild(this.sprite, 2, 0);
-            this.spriteFrameIndex++;
-        }
-        */
-    },
-    onKeyUp:function (e) {
-         g_var.KEYS[e] = false;
-         cc.log('key release')
     },    
     onTouchesEnded:function (touches, event) {
         this.isMouseDown = false;
-        //this._jetSprite.handleTouch(touches[0].getLocation());
-
     },
     onTouchesCancelled:function (touches, event) {
         console.log("onTouchesCancelled");

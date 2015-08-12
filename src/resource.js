@@ -1,15 +1,11 @@
-var s_HelloWorld = "res/HelloWorld.png";
-var s_CloseNormal = "res/CloseNormal.png";
-var s_CloseSelected = "res/CloseSelected.png";
-var s_Walk = "res/walk2.png";
-
-var s_jet = "res/jet.png";
-var s_Walk_plist = "res/walk2.plist";
-
 //var s_tmw_desert_spacing = "res/tmw_desert_spacing.png";
 //var s_tmw_desert_spacing_hd = "tmw_desert_spacing-hd.png";
 //var s_tmx = "res/colld.tmx";
 //多了一个gif有问题
+
+var scene_map = {
+  '0':['res/mario.tmx','res/mario.tmx']
+}
 
 //use as a namespace
 var res = {
@@ -26,7 +22,8 @@ var res = {
     //bgm:'res/music/TERRITORY.mp3',
 
     //tilemap
-    map:'res/mario.tmx',
+    //map:'res/mario.tmx',
+    scene_map:'scene_map',
     tmx_png:'res/kuma1.png',
 
     //kumarun
@@ -46,6 +43,7 @@ var g_var = {
   'gravity':10,
   'PIXMIN':10,
   'DEBUG':true
+  'MAP_ROLLING_SPACE':100,
 }
 
 //这里在preload使用用来提前载入资源
@@ -55,13 +53,13 @@ var g_resources = [
     //s_CloseNormal,
     //s_jet,
     //s_CloseSelected,
-    s_Walk,
+    //s_Walk,
 
     //s_tmw_desert_spacing,
     //{src:s_tmw_desert_spacing_hd}, 
 
     //plist
-    s_Walk_plist,
+    //s_Walk_plist,
 
     //fnt
 

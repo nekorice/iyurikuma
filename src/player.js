@@ -32,13 +32,15 @@ var Player = cc.Sprite.extend({
     //移动 碰撞
     //切换行为 改变表现
     
-    this.collide = new NomalCollide(1)
+    this.collide = new NomalCollide(1);
     
     this.setPosition(p);
     cc.log(this.getPosition());
 
-    this.handle = new TestMove(p, this.speed)
+    this.handle = new TestMove(p, this.speed);
     //this.bullet = PlayerBullet
+
+    this.last_position = p;
     
     //animation 和状态机绑定
     //state 状态机
@@ -114,7 +116,7 @@ var Player = cc.Sprite.extend({
     //key to  move 
     this.last_dt = 0   
 
-    // move in the function move中
+    //修改到状态机中
     if(this.state != 'move'){
       this.move();
     }  
@@ -130,6 +132,7 @@ var Player = cc.Sprite.extend({
       
     }
 
+    return this.getPosition();
   },
   on_touch:function(touch){
     //touch to move
@@ -165,6 +168,7 @@ var Player = cc.Sprite.extend({
 
     }
     
+
     //this.handleKey();
 
     //跑酷 不一定需要移动
@@ -181,7 +185,11 @@ var Player = cc.Sprite.extend({
       //draw boundbox
 
     }
+    
 
+    this.last_position = pos;
+    return pos 
+    //return {x:dx, y:dy} 
   }
 })
 
