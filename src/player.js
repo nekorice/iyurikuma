@@ -20,6 +20,9 @@ var Player = cc.Sprite.extend({
   init:function(p){
     //init 动画
     this.initAnimation();
+
+    //state
+
     this.idle();
     //idle 动画  和 move动画
     //切换动画

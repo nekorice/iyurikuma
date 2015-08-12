@@ -56,7 +56,12 @@ ClassicMove = cc.Class.extend({
   move:function(dt, ground){
     this.pos.x = this.pos.x + this.speed * dt
     this.pos.y = this.pos.y + this.speed_y * dt
-  
+    
+    //不能超出屏幕
+    if(this.pos.x < 0){
+      this.pos.x = 0;
+    }
+
     //need collide
     //有grond的不会小于ground
     //没有ground把 ground 置于复数
@@ -84,6 +89,8 @@ ClassicMove = cc.Class.extend({
     //设定下落速度极限 为jump值
     if(this.speed_y > -this.jump_speed){
       this.speed_y = this.speed_y - this.gravity
+    }else{
+      this.speed_y = -this.jump_speed
     }
     
     return this.pos
@@ -103,3 +110,4 @@ ClassicMove = cc.Class.extend({
 });
 
 TestMove = ClassicMove.extend({});
+
