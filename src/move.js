@@ -63,11 +63,12 @@ ClassicMove = cc.Class.extend({
     }
 
     //need collide
-    //有grond的不会小于ground
-    //没有ground把 ground 置于复数
+    //有grond的不会小于地表高度
+    //没有地表，则把 ground 赋值负数 表示掉到地图下面去了
     if(this.pos.y > ground){ 
       this.pos.y = this.pos.y - this.gravity * dt;
     }else{
+      //hit on ther ground  踩到地板了
       this.pos.y = ground;
       this.speed_y = 0;
       this.jump = 0;

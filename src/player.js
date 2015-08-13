@@ -31,7 +31,9 @@ var Player = cc.Sprite.extend({
     //添加一个行为
     //移动 碰撞
     //切换行为 改变表现
-    
+
+    //包含一个移动器，一个碰撞器，一个状态机（动画作为回调,当前对象，链式回调）
+        
     this.collide = new NomalCollide(1);
     
     this.setPosition(p);
