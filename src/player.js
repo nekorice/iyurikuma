@@ -20,26 +20,25 @@ var Player = cc.Sprite.extend({
   init:function(p){
     //init 动画
     this.initAnimation();
-
-    //state
-
-    this.idle();
     //idle 动画  和 move动画
-    //切换动画
 
     //add a action
     //添加一个行为
     //移动 碰撞
     //切换行为 改变表现
 
-    //包含一个移动器，一个碰撞器，一个状态机（动画作为回调,当前对象，链式回调）
+    //包含一个移动器，一个碰撞器，一个状态机（动画作为回调,当前对象）
+
+    //state
+    this.fsm = new player_fsm(this);
+    //this.idle();
         
     this.collide = new NomalCollide(1);
     
     this.setPosition(p);
     cc.log(this.getPosition());
 
-    this.handle = new TestMove(p, this.speed);
+    this.handle = new ClassicMove(p, this.speed);
     //this.bullet = PlayerBullet
 
     this.last_position = p;
@@ -73,8 +72,6 @@ var Player = cc.Sprite.extend({
     
     //armature.stop()
     //armature.pause()
-    
-
     kumaswing.scale = 0.6;
     kumaswing.setLocalZOrder(999);
 
@@ -94,8 +91,14 @@ var Player = cc.Sprite.extend({
     this.addChild(kumaswing);
   },
   idle:function(){
-    this.state = "idle";
+    //animation
+    //this.state = "idle";
     //maybe not stop just pause
+    
+    //set run = false;
+    //maybe use state
+    this.handle.stopmove();
+
     if(this.animate){
       this.animate.getAnimation().stop();
       this.animate.visible = false;
@@ -105,7 +108,8 @@ var Player = cc.Sprite.extend({
     this.animate.getAnimation().play('swing');
   },
   move:function(){
-    this.state = "move";
+    //animation
+    //this.state = "move";
     if(this.animate){
       this.animate.getAnimation().stop();
       this.animate.visible = false;
@@ -119,13 +123,16 @@ var Player = cc.Sprite.extend({
     this.last_dt = 0   
 
     //修改到状态机中
-    if(this.state != 'move'){
-      this.move();
-    }  
+    //if(this.state != 'move'){
+    //  this.move();
+    //}
+
+    this.fsm.transform(0, 'move');  
     
     if(key == cc.KEY.right){
       this.handle.forword();
     }else if(key == cc.KEY.left ){
+      //回头不能够超过屏幕
       this.handle.backword();
     }else if(key == cc.KEY.x){
       console.log('jump')
@@ -147,8 +154,14 @@ var Player = cc.Sprite.extend({
   },
   collide_ground:function(tiles){
     //get tiles
+    //-->map对象-->battlelayer
+    //this.parent = map
     var tpos = TilesHelper.getTilesPos(tiles, this.getPosition());
-    var ground = TilesHelper.getGround(tiles, tpos[1]);
+    //get到
+    var ground = TilesHelper.getGround(tiles, tpos);
+
+    //jump可以往上，但是不能往下
+
     return ground
   },
   collide:function(){
@@ -159,6 +172,8 @@ var Player = cc.Sprite.extend({
     
     //切换状态的cd时间 
     //在状态机中定义
+
+    /*
     if(this.state != 'idle'){
       this.last_dt += dt;
       if(this.last_dt > 1.25){
@@ -168,27 +183,29 @@ var Player = cc.Sprite.extend({
       }   
     }else{
 
-    }
-    
+    }*/
 
+    this.fsm.transform(dt, 'idle');
     //this.handleKey();
 
     //跑酷 不一定需要移动
     
     //get 地面高度
     var ground_hight = this.collide_ground();
+    
+    var left = -this.parent.x + 20
+    //防止超过两端
+    //dt 地板高度  最左坐标 最右坐标
+    var pos = this.handle.move(dt, ground_hight, left, (-this.parent.x+this.parent.swidth));
 
-    var pos = this.handle.move(dt, ground_hight);
     //cc.log(pos);
     this.setPosition(pos);
     //update position
 
     if(g_var.DEBUG){
       //draw boundbox
-
     }
     
-
     this.last_position = pos;
     return pos 
     //return {x:dx, y:dy} 

@@ -4,16 +4,17 @@
 //多了一个gif有问题
 
 var scene_map = {
-  '0':['res/mario.tmx','res/mario.tmx']
+
+  '0':['res/mario.tmx','res/mario.tmx'],
 }
 
 //use as a namespace
 var res = {
-    bone_json:'res/bone/demo.json',
-    d1:'res/bone/DemoPlayer0.plist',
-    d1g:'res/bone/DemoPlayer0.png',
-    d2:'res/bone/DemoPlayer1.plist',
-    d2g:'res/bone/DemoPlayer1.png',
+    //bone_json:'res/bone/demo.json',
+    //d1:'res/bone/DemoPlayer0.plist',
+    //d1g:'res/bone/DemoPlayer0.png',
+    //d2:'res/bone/DemoPlayer1.plist',
+    //d2g:'res/bone/DemoPlayer1.png',
 
     //image
     background:'res/back.jpg',
@@ -22,8 +23,8 @@ var res = {
     //bgm:'res/music/TERRITORY.mp3',
 
     //tilemap
-    //map:'res/mario.tmx',
-    scene_map:'scene_map',
+    map:'res/mario.tmx',
+    
     tmx_png:'res/kuma1.png',
 
     //kumarun
@@ -42,8 +43,9 @@ var g_var = {
   'horizon':100,
   'gravity':10,
   'PIXMIN':10,
-  'DEBUG':true
+  'DEBUG':true,
   'MAP_ROLLING_SPACE':100,
+  'scene_map':scene_map,
 }
 
 //这里在preload使用用来提前载入资源
@@ -74,3 +76,4 @@ var g_resources = [
 for (var i in res) {
     g_resources.push(res[i]);
 }
+

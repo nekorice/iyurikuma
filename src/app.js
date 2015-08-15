@@ -58,10 +58,10 @@ var Battle = cc.Layer.extend({
         this.addChild(back);
 
         
-        //
+        //如果addChild undefined 就会报错 already add
         //Map
-        this.map = new Map();
-        this.addChild(this.map);
+        this.map = new Map(size.width);
+        this.addChild(this.map, 1);
 
         //tiled map test
         //tiled map 有1像素的bug 需要多留一个像素 比如32px 填写31px 边框0 设置间距1
@@ -89,7 +89,8 @@ var Battle = cc.Layer.extend({
        
         //200 -> test
         this.player = new Player(cc.p(objX,objY+200));
-        this.addChild(this.player);
+        //player应当挂接到map上
+        this.map.addChild(this.player);
 
         this.init_lisener();
         this.upon_tile(this._tileMap);
@@ -111,11 +112,11 @@ var Battle = cc.Layer.extend({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:function(keyCode, event){
                 self.player.handleKey(keyCode);
-                self.onKeyDown(keyCode);
+                //self.onKeyDown(keyCode);
             },
             onKeyReleased: function(keyCode, event){
 
-                self.onKeyUp(keyCode);
+                //self.onKeyUp(keyCode);
                 if(keyCode == cc.KEY.back)
                 {
                     self.back_menu();
@@ -159,6 +160,8 @@ var Battle = cc.Layer.extend({
 
         jump and collide
         */
+
+        /*
         var mapWidth = tilemap.getMapSize().width;
         var mapHeight = tilemap.getMapSize().height;
         var tileWidth = tilemap.getTileSize().width;
@@ -177,6 +180,7 @@ var Battle = cc.Layer.extend({
         //done
         if(properties != undefined)
             cc.log(properties["collide"] == 1);
+        */
     },
     // a selector callback
     menuCloseCallback:function (sender) {
@@ -201,10 +205,10 @@ var Battle = cc.Layer.extend({
         //sprite.update
         //设定每一帧
         //this.sprite.update(dt);
-        this.player.update(dt);
+        var ppos = this.player.update(dt);
 
         //map update dt
-        this.map.update(dt);
+        this.map.update(dt, ppos);
 
 
     },    

@@ -53,7 +53,7 @@ ClassicMove = cc.Class.extend({
     this.run = true;
     return this.pos
   },
-  move:function(dt, ground){
+  move:function(dt, ground, max_left, max_right){
     this.pos.x = this.pos.x + this.speed * dt
     this.pos.y = this.pos.y + this.speed_y * dt
     
@@ -65,6 +65,7 @@ ClassicMove = cc.Class.extend({
     //need collide
     //有grond的不会小于地表高度
     //没有地表，则把 ground 赋值负数 表示掉到地图下面去了
+    //还有多重ground的情况 这里的ground 应当指当前可以看到的ground
     if(this.pos.y > ground){ 
       this.pos.y = this.pos.y - this.gravity * dt;
     }else{
@@ -94,6 +95,13 @@ ClassicMove = cc.Class.extend({
       this.speed_y = -this.jump_speed
     }
     
+    if(this.pos.x < max_left){
+      this.pos.x = max_left;
+    }
+    if(this.pos.x > max_right){
+      this.pos.x = max_right;
+    }
+
     return this.pos
   },
   stopmove:function(dt){
