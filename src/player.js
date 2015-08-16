@@ -27,7 +27,7 @@ var Player = cc.Sprite.extend({
     //移动 碰撞
     //切换行为 改变表现
 
-    //包含一个移动器，一个碰撞器，一个状态机（动画作为回调,当前对象）
+    //包含一个移动器，一个碰撞器，一个状态机（动画作为回调），一个动画管理器
 
     //state
     this.fsm = new player_fsm(this);

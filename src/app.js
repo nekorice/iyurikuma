@@ -54,7 +54,7 @@ var Battle = cc.Layer.extend({
         //add background image
         var back = new cc.Sprite(res.background);
         back.setPosition(size.width / 2,size.height / 2);
-        back.setScale(1.5);
+        //back.setScale(0.5);
         this.addChild(back);
 
         

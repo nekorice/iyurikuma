@@ -10,6 +10,9 @@ var player_states = {
   'idle':{
     'action_time':0,
   },
+  'stop':{
+    'action_time':0,
+  },
   'move':{
     'action_time':1.25,
   },
@@ -33,14 +36,15 @@ player_fsm = function(host){
   this.last_action_time = 0;
   this.last_action_pass = 0;
   this.state = '';
+  return this;
 }
 
-player_fsm.prototype.wait_action_over = function(dt){
+player_fsm.prototype.wait_action_over = function(dt) {
   //if(state == 'idle'){
   //  return true;
   //}
   this.last_action_pass += dt; 
-  if(this.last_action_pass >= this.last_action_time ){
+  if(this.last_action_pass >= this.last_action_time){
     cc.log('change');
     return true;
   }

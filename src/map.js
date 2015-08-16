@@ -65,6 +65,7 @@ var Map = cc.Layer.extend({
       this.current_map = this.map_list[this.map_index];
       return true
     }
+    this.map_index --;
     return false
   },
   roll:function(dleft, dright){
@@ -75,7 +76,7 @@ var Map = cc.Layer.extend({
     }
     //dleft不判断 不允许地图回滚
     
-    if(-pos.x >= this.current_map.width){
+    if(-pos.x > this.current_map.width && dright > 0){
       cc.log('swidth map next')
       if(!this.switch_next()){
         cc.log('the end of the map')
