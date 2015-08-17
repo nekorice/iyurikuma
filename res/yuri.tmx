@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" nextobjectid="6">
+ <tileset firstgid="1" name="ymap" tilewidth="32" tileheight="32" spacing="1" tilecount="4">
+  <image source="ymap.png" width="131" height="32"/>
+  <tile id="3">
+   <properties>
+    <property name="collide" value="1"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="collide" width="30" height="20">
+  <properties>
+   <property name="collide" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4B4wEIkHgWjABkQm25G09XIBtRKJ6PpahQMBgAAuL0A6Q==
+  </data>
+ </layer>
+ <layer name="map" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4B4wEgkHgWjABkQm25G09XIBtRKJ6RipgHCzAOER/1LHwwAnfoBow==
+  </data>
+ </layer>
+ <objectgroup name="player">
+  <object id="3" name="player" x="64" y="416" width="32" height="32"/>
+  <object id="4" name="enermy" x="832" y="256" width="32" height="32"/>
+ </objectgroup>
+</map>
