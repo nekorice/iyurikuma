@@ -20,7 +20,7 @@ var TilesHelper = (function(){
     'getGround':function(tiles, pos){
       //get 当前高度 最近的一个往下最近的一个地面
       //return pix
-      return 128;
+      return 192;
     }
   }
 })();

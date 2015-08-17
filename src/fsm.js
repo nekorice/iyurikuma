@@ -59,6 +59,10 @@ player_fsm.prototype.transform = function(dt, state){
     //不转换
     //cc.log('not transform')
     this.last_action_pass = 0;
+    //临时代码
+    if(this.host[state]){
+       this.host[state]()
+    }
     return false
   }
 

@@ -88,7 +88,7 @@ var Battle = cc.Layer.extend({
         //var pleft = array[1];
        
         //200 -> test
-        this.player = new Player(cc.p(objX,objY+200));
+        this.player = new Player(cc.p(objX,objY));
         //player应当挂接到map上
         this.map.addChild(this.player);
 

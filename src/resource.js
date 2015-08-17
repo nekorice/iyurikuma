@@ -5,7 +5,7 @@
 
 var scene_map = {
 
-  '0':['res/mario.tmx','res/mario.tmx'],
+  '0':['res/yuri.tmx','res/yuri.tmx'],
 }
 
 //use as a namespace
@@ -23,18 +23,20 @@ var res = {
     //bgm:'res/music/TERRITORY.mp3',
 
     //tilemap
-    map:'res/mario.tmx',
-    
-    tmx_png:'res/kuma1.png',
+    //map:'res/mario.tmx',
+    //tmx_png:'kuma1.png',
+    y_map:'res/yuri.tmx',
+    tmx_png:'res/ymap.png',
+   
 
     //kumarun
     kumarun:'res/kumarun.json',
     krp:'res/kumarun0.plist',
     krg:'res/kumarun0.png',
     //kumaswing
-    kumaswing:'res/swing.json',
-    kwp:'res/swing0.plist',
-    kwg:'res/swing0.png',
+    kumaswing:'res/kumasw.json',
+    kwp:'res/kumasw0.plist',
+    kwg:'res/kumasw0.png',
 }
 
 var g_var = {

@@ -31,7 +31,7 @@ var Map = cc.Layer.extend({
     var start_m = 0
     cc.log(loading_maps)
     for (var i = 0; i < loading_maps.length; i++) {
-      var tileMap =  new cc.TMXTiledMap(res.map);
+      var tileMap =  new cc.TMXTiledMap(loading_maps[i]);
       //same map cannot be add twice
       this.addChild(tileMap, 1);
       this.load_object(tileMap);
