@@ -476,7 +476,7 @@ cc.TMXLayer = cc.SpriteBatchNode.extend(/** @lends cc.TMXLayer# */{
      * @return {cc.Sprite}
      */
     getTileAt: function (pos, y) {
-        if(!pos)
+        if(pos == null)
             throw "cc.TMXLayer.getTileAt(): pos should be non-null";
         if(y !== undefined)
             pos = cc.p(pos, y);
@@ -524,7 +524,7 @@ cc.TMXLayer = cc.SpriteBatchNode.extend(/** @lends cc.TMXLayer# */{
      * @return {Number}
      */
     getTileGIDAt:function (pos, y) {
-        if(!pos)
+        if(pos == null)
             throw "cc.TMXLayer.getTileGIDAt(): pos should be non-null";
         if(y !== undefined)
             pos = cc.p(pos, y);
@@ -551,7 +551,7 @@ cc.TMXLayer = cc.SpriteBatchNode.extend(/** @lends cc.TMXLayer# */{
      * @return {Number}
      */
     getTileFlagsAt:function (pos, y) {
-        if(!pos)
+        if(pos == null)
             throw "cc.TMXLayer.getTileFlagsAt(): pos should be non-null";
         if(y !== undefined)
             pos = cc.p(pos, y);
@@ -581,7 +581,7 @@ cc.TMXLayer = cc.SpriteBatchNode.extend(/** @lends cc.TMXLayer# */{
      * @param {Number} [flags]
      */
     setTileGID: function(gid, posOrX, flagsOrY, flags) {
-        if(!posOrX)
+        if(posOrX == null)
             throw "cc.TMXLayer.setTileGID(): pos should be non-null";
         var pos;
         if (flags !== undefined) {
@@ -637,7 +637,7 @@ cc.TMXLayer = cc.SpriteBatchNode.extend(/** @lends cc.TMXLayer# */{
      * @param {Number} [y]
      */
     removeTileAt:function (pos, y) {
-        if(!pos)
+        if(pos == null)
             throw "cc.TMXLayer.removeTileAt(): pos should be non-null";
         if(y !== undefined)
             pos = cc.p(pos, y);

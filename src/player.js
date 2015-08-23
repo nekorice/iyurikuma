@@ -171,48 +171,33 @@ var Player = cc.Sprite.extend({
     //get tiles
     //-->map对象-->battlelayer
     //this.parent = map
-    var tpos = TilesHelper.getTilesPos(tiles, this.getPosition());
+    var mpos = this.parent.get_map_pos(this.getPosition())
+    var tpos = TilesHelper.getTilesPos(tiles, mpos);
     //get到
     var ground = TilesHelper.getGround(tiles, tpos);
 
     //jump可以往上，但是不能往下
-
     return ground
   },
   collide:function(){
 
   },
   update:function(dt){
-    //give to handlekey
-    
-    //切换状态的cd时间 
-    //在状态机中定义
 
-    /*
-    if(this.state != 'idle'){
-      this.last_dt += dt;
-      if(this.last_dt > 1.25){
-        this.idle();
-        this.handle.stopmove();
-        this.last_dt = 0;
-      }   
-    }else{
-
-    }*/
-
+    //切换状态的cd时间 在状态机中定义
     this.fsm.transform(dt, 'idle');
-    //this.handleKey();
+    //key的响应只改变运动参数（速度，加速度，方向）
+    //更新在update中通过其他函数处理完成
 
-    //跑酷 不一定需要移动
-    
+    //this.parent == maplayer
     //get 地面高度
-    var ground_hight = this.collide_ground();
+    //不能使用current map  此函数应该放到map里面  
+    var ground_hight = this.collide_ground(this.parent.current_map);
     
-    var left = -this.parent.x + 20
+    var left = -this.parent.x + this.boxWidth
     //防止超过两端
     //dt 地板高度  最左坐标 最右坐标
     var pos = this.handle.move(dt, ground_hight, left, (-this.parent.x+this.parent.swidth));
-
     //cc.log(pos);
     this.setPosition(pos);
     //update position

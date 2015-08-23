@@ -54,6 +54,12 @@ ClassicMove = cc.Class.extend({
     return this.pos
   },
   move:function(dt, ground, max_left, max_right){
+    /*
+      dt:      每帧时间
+      ground: 地板高度
+      max_left: 最左坐标
+      max_right: 最右坐标
+    */
     this.pos.x = this.pos.x + this.speed * dt
     this.pos.y = this.pos.y + this.speed_y * dt
     
@@ -70,6 +76,7 @@ ClassicMove = cc.Class.extend({
       this.pos.y = this.pos.y - this.gravity * dt;
     }else{
       //hit on ther ground  踩到地板了
+      //触发land状态
       this.pos.y = ground;
       this.speed_y = 0;
       this.jump = 0;
@@ -81,6 +88,8 @@ ClassicMove = cc.Class.extend({
       this.speed = 0
     }
 
+    //****  现在这样设定，速度的增加和减少会和帧率相关 *****
+    //需要改进 speed的减少也需要和dt相关 减小的加速度是常数
     if(this.speed != 0 && !this.run){
       //60fps  结束时的帧速
       //模拟摩擦力
@@ -88,6 +97,7 @@ ClassicMove = cc.Class.extend({
       this.speed = this.speed - (this.speed / 2)
     }
     
+
     //设定下落速度极限 为jump值
     if(this.speed_y > -this.jump_speed){
       this.speed_y = this.speed_y - this.gravity
@@ -108,6 +118,7 @@ ClassicMove = cc.Class.extend({
     this.run = false;
   },
   dojump:function(dt){
+    //触发jump状态
     if(this.jump <= 1){
       //do jump
       this.speed_y = 400;

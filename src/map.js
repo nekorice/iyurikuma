@@ -12,6 +12,7 @@ var Map = cc.Layer.extend({
   next:null,
   map_list:[],
   map_index:0,
+  chapter_end:false,
   ctor:function (swidth) {
     this._super();
     this.init(swidth);
@@ -58,6 +59,17 @@ var Map = cc.Layer.extend({
     //动态加载后面的图
     //一次loading完，不做这么复杂的方式
   },
+  get_map_pos:function(ipos){
+    //地图边界时，当前地图的坐标和相对于mapLayer的坐标会不一样
+    //cc.log(this.current_map.x);
+    
+    var bx = ipos.x - this.current_map.x;
+    if(bx < 0){
+      //还在上一幅图
+      bx = ipos.x
+    }
+    return cc.p(bx, ipos.y)
+  },
   switch_next:function(){
     //
     this.map_index ++;
@@ -69,17 +81,21 @@ var Map = cc.Layer.extend({
     return false
   },
   roll:function(dleft, dright){
+
     var pos = this.getPosition();
     if(dright > 0){
       cc.log('dright >0')
       pos.x = pos.x - dright;
     }
-    //dleft不判断 不允许地图回滚
     
-    if(-pos.x > this.current_map.width && dright > 0){
-      cc.log('swidth map next')
-      if(!this.switch_next()){
+    //dleft不判断 暂不允许地图回滚
+
+    //当前窗口+滚动宽度大于地图宽度，进入下一个地图
+    if((this.swidth -pos.x) > (this.current_map.width + this.current_map.x) && dright > 0){
+      cc.log('swith map next')
+      if(this.chapter_end || !this.switch_next()){
         cc.log('the end of the map')
+        this.chapter_end = true;
         return false
       };
     }

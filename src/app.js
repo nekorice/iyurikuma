@@ -160,27 +160,6 @@ var Battle = cc.Layer.extend({
 
         jump and collide
         */
-
-        /*
-        var mapWidth = tilemap.getMapSize().width;
-        var mapHeight = tilemap.getMapSize().height;
-        var tileWidth = tilemap.getTileSize().width;
-        var tileHeight = tilemap.getTileSize().height;               
-        var pos = this.getPosition();
-        //get this tile layer
-        var line = parseInt(pos.x / tileWidth) + 1;
-        var column = mapHeight - parseInt(pos.y / tileHeight);
-        //console.log(line);
-        //console.log(column);
-
-        var collidableLayer = tilemap.getLayer("collide");
-        var gid = collidableLayer.getTileGIDAt(3,16);
-        cc.log(gid);
-        properties = tilemap.getPropertiesForGID(gid);
-        //done
-        if(properties != undefined)
-            cc.log(properties["collide"] == 1);
-        */
     },
     // a selector callback
     menuCloseCallback:function (sender) {

@@ -118,7 +118,7 @@ player_fsm.prototype.check_hit  = function(dt){
 
 /*
 
-thenObject -->differed
+thenObject -->deferred
 
 fsm --> host  
 
