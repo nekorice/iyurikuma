@@ -32,3 +32,7 @@ open http://localhost:8000/ in the browser.
 **x**  jump
 
 “←”，“→”，“↑”，“↓”   move
+
+##Take a look
+
+[http://nekorice.github.io/iyurikuma/](http://nekorice.github.io/iyurikuma/)
