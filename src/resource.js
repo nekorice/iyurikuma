@@ -42,11 +42,14 @@ var res = {
 var g_var = {
   'player_zorder':2,
   'KEYS' : [],
-  'horizon':100,
+  //地平线
+  'horizon':192,
+  //重力
   'gravity':10,
   'PIXMIN':10,
   'DEBUG':true,
   'MAP_ROLLING_SPACE':100,
+  'MAP_SKY_SPACE':200,
   'scene_map':scene_map,
 }
 

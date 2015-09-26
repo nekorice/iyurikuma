@@ -14,7 +14,8 @@ var player_states = {
     'action_time':0,
   },
   'move':{
-    'action_time':0.5,
+    //至少0.75 否则会出现转身的错误
+    'action_time':0.75,
   },
   'hit':{
     'action_time':1,

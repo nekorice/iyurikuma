@@ -174,10 +174,14 @@ var Player = cc.Sprite.extend({
       delete this.keyHasPress[key];
       switch(key){
         case cc.KEY.right:
-          this.fsm.transform('idle');
+          if(!this.keyHasPress[cc.KEY.left]){
+            this.fsm.transform('idle');
+          }
           break;
         case cc.KEY.left:
-          this.fsm.transform('idle');
+          if(!this.keyHasPress[cc.KEY.right]){
+            this.fsm.transform('idle');
+          }
           break;
         case cc.KEY.x:
           break;
@@ -232,6 +236,10 @@ var Player = cc.Sprite.extend({
     //cc.log(pos);
     this.setPosition(pos);
     //update position
+
+
+
+
 
     if(g_var.DEBUG){
       //draw boundbox

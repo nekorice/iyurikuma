@@ -33,7 +33,7 @@ var Battle = cc.Layer.extend({
         
         //如果addChild undefined 就会报错 already add
         //Map
-        this.map = new Map(size.width);
+        this.map = new Map(size);
         this.addChild(this.map, 1);
 
         //tiled map test
@@ -129,6 +129,9 @@ var Battle = cc.Layer.extend({
         //设定每一帧
         //this.sprite.update(dt);
         var ppos = this.player.update(dt);
+
+        //use this auto follow player
+        //this.map.runAction(cc.follow(this.player));
 
         //map update dt
         this.map.update(dt, ppos);

@@ -17,8 +17,9 @@ var Map = cc.Layer.extend({
     this._super();
     this.init(swidth);
   },
-  init:function(swidth){
-    this.swidth = swidth;
+  init:function(win){
+    this.swidth = win.width;
+    this.sheight = win.height;
     //scene config
     //chapter:[chapter_id,section_id]
     //scene_id - > get scene file
@@ -80,13 +81,24 @@ var Map = cc.Layer.extend({
     this.map_index --;
     return false
   },
-  roll:function(dleft, dright){
+  roll:function(dleft, dright, dtop, dbottom){
 
     var pos = this.getPosition();
     if(dright > 0){
       cc.log('dright >0')
       pos.x = pos.x - dright;
     }
+
+    if(dtop > 0){
+      pos.y = pos.y - dtop; 
+    }
+
+    if(dbottom > 0 && pos.y < 0){
+      pos.y = pos.y + dbottom;
+    }
+    
+    //不可以往下看啊
+    if(pos.y > 0){ pos.y = 0 }
     
     //dleft不判断 暂不允许地图回滚
 
@@ -105,7 +117,7 @@ var Map = cc.Layer.extend({
   roll_middle:function(dx, dy){
     //人物固定中间的地图滚动
     //直接同步人物移动
-    //高度是否同步
+    //可以使用this.map.runAction(cc.follow(this.player));
     var pos = this.getPosition();
     pos.x = dx;
     pos.y = dy;
@@ -118,10 +130,14 @@ var Map = cc.Layer.extend({
   },
   calc_roll:function(ppos, swidth){
     //player 在主屏的位置
-    //this.x是已经卷动的距离 为负数
+    //this.x this.y是已经卷动的距离 为负数
     var dright = g_var['MAP_ROLLING_SPACE'] - (swidth - ppos.x) + this.x
     var dleft = g_var['MAP_ROLLING_SPACE'] - (ppos.x - this.x)
-    return [dleft,dright]
+    var top =  g_var['MAP_SKY_SPACE'] - (this.sheight - this.y - ppos.y); 
+    //var bottom = g_var['horizon'] - (ppos.y + this.y) 
+    var bottom = (this.sheight - ppos.y - this.y) - g_var['MAP_SKY_SPACE']
+
+    return [dleft,dright, top, bottom]
   },
   display_left:function(){
 
@@ -132,8 +148,8 @@ var Map = cc.Layer.extend({
   update:function(dt, ppos){
     //地图滚动
     var d = this.calc_roll(ppos, this.swidth);
-    //map 移动后 player的位置要减少
-    this.roll(d[0], d[1]);
+    //map移动  left right  top  bottom
+    this.roll(d[0], d[1], d[2], d[3]);
   
   }
 });
