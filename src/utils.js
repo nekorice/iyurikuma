@@ -29,7 +29,7 @@ var TilesHelper = (function(){
       var h = tilemap.tileHeight
       var w = tilemap.tileWidth
       //添加一个计算时间可能导致的响应误差
-      pos.y = pos.y + h/3
+      pos.y = pos.y + h/10
       
       return { x:Math.floor(pos.x/w), y:tilemap.mapHeight - Math.floor(pos.y/h)  }
     },

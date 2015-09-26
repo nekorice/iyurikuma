@@ -11,7 +11,7 @@ ClassicMove = cc.Class.extend({
   x_op:0,
   y_op:0,
   per_speed:10,
-  jump_speed:200,
+  jump_speed:450,
   ctor:function (pos, sp) {
     if(this._super){
       this._super(pos, sp);
@@ -73,7 +73,8 @@ ClassicMove = cc.Class.extend({
     //没有地表，则把 ground 赋值负数 表示掉到地图下面去了
     //还有多重ground的情况 这里的ground 应当指当前可以看到的ground
     if(this.pos.y > ground){ 
-      this.pos.y = this.pos.y - this.gravity * dt;
+      //交给speedy计算，不再多次计算重力
+      //this.pos.y = this.pos.y - this.gravity * dt;
     }else{
       //hit on ther ground  踩到地板了
       //触发land状态
@@ -121,7 +122,7 @@ ClassicMove = cc.Class.extend({
     //触发jump状态
     if(this.jump <= 1){
       //do jump
-      this.speed_y = 400;
+      this.speed_y = this.jump_speed;
       //二段跳得设置
       this.jump += 1;
     }
