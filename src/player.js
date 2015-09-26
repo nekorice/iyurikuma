@@ -24,6 +24,8 @@ var Player = cc.Sprite.extend({
     this.init(p);
   },
   init:function(p){
+
+    this.keyHasPress = {}
     //init 动画
     this.initAnimation();
 
@@ -128,32 +130,58 @@ var Player = cc.Sprite.extend({
   stop:function(){
     this.change_animation(this.act.run, 'stop');
   },
-  handleKey:function(key){
-    //key to  move 
-    //this.last_dt = 0   
-
-    //修改到状态机中
-    //if(this.state != 'move'){
-    //  this.move();
-    //}
-    //cc.log(key);
-    
-    //处理多个按键  貌似这里一次只会返回一个keycode
-    if(key == cc.KEY.right){
+  handleKey:function(dt){
+    //持续性的动作在这里处理
+    //每一帧的按键处理
+    if( cc.KEY.right in this.keyHasPress){
       this.handle.forword();
       this.animate_forword = 1;
-      this.fsm.transform(0, 'move');
-    }else if(key == cc.KEY.left ){
-      //回头不能够超过屏幕
+    }else if( cc.KEY.left in this.keyHasPress){
       this.handle.backword();
       this.animate_forword = -1;
-      this.fsm.transform(0, 'move');
+    }
+  },
+  pressKey:function(key, press){
+    /** 
+      press: true-press false-release 
+    */
 
-    }else if(key == cc.KEY.x){
-      console.log('jump')
-      this.handle.dojump();
-    }else{
+    //记录按键状态和发送状态机指令
+    //key up 事件
+    //press
+    if(press){
       
+      this.keyHasPress[key] = true;
+
+      switch(key){
+        case cc.KEY.right:
+          //add forword speed
+          this.fsm.transform('move');
+          break;
+        case cc.KEY.left:
+          //add back speed
+          this.fsm.transform('move');
+          break;
+        case cc.KEY.x:
+          //jump
+          console.log('jump')
+          this.handle.dojump();
+          break;
+      }
+
+    }else{
+
+      delete this.keyHasPress[key];
+      switch(key){
+        case cc.KEY.right:
+          this.fsm.transform('idle');
+          break;
+        case cc.KEY.left:
+          this.fsm.transform('idle');
+          break;
+        case cc.KEY.x:
+          break;
+      }
     }
     
     return this.getPosition();
@@ -184,20 +212,23 @@ var Player = cc.Sprite.extend({
   },
   update:function(dt){
 
-    //切换状态的cd时间 在状态机中定义
-    this.fsm.transform(dt, 'idle');
     //key的响应只改变运动参数（速度，加速度，方向）
     //更新在update中通过其他函数处理完成
+    this.handleKey(dt);
+
+    //切换状态的cd时间 在状态机中定义
+    this.fsm.do_state(dt);
 
     //this.parent == maplayer
     //get 地面高度
-    //不能使用current map  此函数应该放到map里面  
+    //不能使用current map  此函数应该放到map里面  为了实现回到旧的地图  
     var ground_hight = this.collide_ground(this.parent.current_map);
     
-    var left = -this.parent.x + this.boxWidth
+    var left = -this.parent.x + this.boxWidth;
+    var right = -this.parent.x+this.parent.swidth;
     //防止超过两端
     //dt 地板高度  最左坐标 最右坐标
-    var pos = this.handle.move(dt, ground_hight, left, (-this.parent.x+this.parent.swidth));
+    var pos = this.handle.move(dt, ground_hight, left, right);
     //cc.log(pos);
     this.setPosition(pos);
     //update position

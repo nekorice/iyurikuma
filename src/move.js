@@ -10,8 +10,8 @@ ClassicMove = cc.Class.extend({
   max_speed:null,
   x_op:0,
   y_op:0,
-  per_speed:30,
-  jump_speed:150,
+  per_speed:10,
+  jump_speed:200,
   ctor:function (pos, sp) {
     if(this._super){
       this._super(pos, sp);

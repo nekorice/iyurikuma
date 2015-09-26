@@ -1,25 +1,9 @@
-/****************************************************************************
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
-
- Cocos2d-js v3.0 final
- ****************************************************************************/
+/*
+    File: app.js
+    Author: necorice
+    Date:   2015/7/20
+    license: MIT
+*/
 
 var Battle = cc.Layer.extend({
     isMouseDown:false,
@@ -34,19 +18,8 @@ var Battle = cc.Layer.extend({
         var size = cc.director.getWinSize();
         //maybe some problem
         cc.director.setProjection(cc.Director.PROJECTION_2D);
-
-        //this.helloLabel = cc.LabelTTF.create("Hello World", "Arial", 38);
-        // position the label on the center of the screen
-        //this.helloLabel.setPosition(size.width / 2, 0);
-        // add the label as a child to this layer
-        //this.addChild(this.helloLabel, 5);
         
         //静态的不经常更新的层
-        //var lazyLayer = cc.Layer.create();
-        //this.addChild(lazyLayer);
-
-        //this.setTouchEnabled(true);
-        //this.setKeyboardEnabled(true);
 
         //playmusic
         //cc.audioEngine.playMusic(res.bgm, true);
@@ -111,12 +84,12 @@ var Battle = cc.Layer.extend({
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:function(keyCode, event){
-                self.player.handleKey(keyCode);
+                self.player.pressKey(keyCode, true);
                 //self.onKeyDown(keyCode);
             },
             onKeyReleased: function(keyCode, event){
-
                 //self.onKeyUp(keyCode);
+                self.player.pressKey(keyCode, false);
                 if(keyCode == cc.KEY.back)
                 {
                     self.back_menu();
@@ -130,36 +103,7 @@ var Battle = cc.Layer.extend({
 
     },
     upon_tile:function(tilemap){
-        /*
-        this = tilemap
-        this.obstacles = [];
-        var mapWidth = tilemap.getMapSize().width;
-        var mapHeight = tilemap.getMapSize().height;
-        var tileWidth = tilemap.getTileSize().width;
-        var tileHeight = tilemap.getTileSize().height;
-        var collidableLayer = this.getLayer("collidable");
-        var i, j;
-        for (i = 0; i < mapWidth; i++){
-            for (j = 0; j < mapHeight; j++){
-                var tileCoord = new cc.Point(i, j);
-                var gid = collidableLayer.getTileGIDAt(tileCoord);
-                if(gid) {
-                    var tileXPositon = i * tileWidth;
-                    var tileYPosition = (mapHeight * tileHeight) - ((j+1) * tileHeight);
-                    var react = cc.rect(tileXPositon, tileYPosition, tileWidth, tileHeight);
-                    this.obstacles.push(react);
-                }
-            }
-        } 
 
-       
-        the map is 
-        0,0  1,0 x+
-        0,1  1,1
-        y+
-
-        jump and collide
-        */
     },
     // a selector callback
     menuCloseCallback:function (sender) {
