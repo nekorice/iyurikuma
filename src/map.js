@@ -34,6 +34,8 @@ var Map = cc.Layer.extend({
     cc.log(loading_maps)
     for (var i = 0; i < loading_maps.length; i++) {
       var tileMap =  new cc.TMXTiledMap(loading_maps[i]);
+      //test one line gap
+      this.anti_para(tileMap);
       //same map cannot be add twice
       this.addChild(tileMap, 1);
       this.load_object(tileMap);
@@ -46,6 +48,16 @@ var Map = cc.Layer.extend({
     cc.log(this.map_list)
     this.current_map = this.map_list[0]
     //this.tileMap = cc.TMXTiledMap.create(res.map);
+    
+  },
+  anti_para:function(map){
+    //not effect
+    //tilemap 基本都要留两个像素间隔，左右各加多一个像素32+2 保证不出错
+    var child = map.getChildren()
+    for (var i = child.length - 1; i >= 0; i--) {
+      //child[i].getTexture().setAntiAliasTexParameters();
+      child[i].getTexture().setAliasTexParameters();
+    };
     
   },
   load_object:function(map){

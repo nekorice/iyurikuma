@@ -18,6 +18,9 @@ var Battle = cc.Layer.extend({
         var size = cc.director.getWinSize();
         //maybe some problem
         cc.director.setProjection(cc.Director.PROJECTION_2D);
+        cc.FIX_ARTIFACTS_BY_STRECHING_TEXEL = 1;
+
+        //this.setAntiAliasTexParameters()
         
         //静态的不经常更新的层
 

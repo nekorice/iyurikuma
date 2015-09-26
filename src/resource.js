@@ -27,6 +27,7 @@ var res = {
     //tmx_png:'kuma1.png',
     y_map:'res/yuri.tmx',
     tmx_png:'res/ymap.png',
+    tmx_png2:'res/xmap.png',
    
 
     //kumarun
