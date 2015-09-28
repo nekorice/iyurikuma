@@ -26,13 +26,14 @@ var Battle = cc.Layer.extend({
 
         //playmusic
         //cc.audioEngine.playMusic(res.bgm, true);
-
-        //add background image
+        
+        //add background image load chapter
+        /*
         var back = new cc.Sprite(res.background);
-        back.setPosition(size.width / 2,size.height / 2);
+        back.setPosition(size.width / 2, size.height / 2);
         //back.setScale(0.5);
         this.addChild(back);
-
+        */
         
         //如果addChild undefined 就会报错 already add
         //Map

@@ -28,6 +28,12 @@ var Map = cc.Layer.extend({
     //res.scene_map[this.chapter][this.section]
     //this.map_list = res.scene_map[this.chapter];
     
+    //背景需要做的超过一屏的分辨率
+    //add background image load chapter
+    this.back = new cc.Sprite(res.background);
+    this.back.setPosition(this.width / 2, this.height / 2);
+    this.addChild(this.back);
+
 
     var loading_maps = g_var.scene_map[this.chapter].slice(this.section);
     var start_m = 0
@@ -95,6 +101,11 @@ var Map = cc.Layer.extend({
   },
   roll:function(dleft, dright, dtop, dbottom){
 
+    if(dright > 0 && this.chapter_end){
+      //快速返回
+      return false
+    }
+
     var pos = this.getPosition();
     if(dright > 0){
       cc.log('dright >0')
@@ -124,7 +135,19 @@ var Map = cc.Layer.extend({
       };
     }
 
+    if(dright > 0){
+      this.back.x = this.back.x + dright;
+    }
+    if(dleft > 0){
+      //this.back.x = this.back.x - dleft;
+    }
+
     this.setPosition(pos);
+    //移动background
+
+    
+
+
   },
   roll_middle:function(dx, dy){
     //人物固定中间的地图滚动
