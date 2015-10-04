@@ -100,33 +100,25 @@ var Map = cc.Layer.extend({
     return false
   },
   roll:function(dleft, dright, dtop, dbottom){
+    
+    this._rollh(dleft, dright);
+    this._rollv(dtop, dbottom);
+    
+  },
+  _rollh:function(dleft, dright){
 
-    if(dright > 0 && this.chapter_end){
+    if(dright > 0 && this.chapter_end ){
       //快速返回
       return false
     }
 
-    var pos = this.getPosition();
     if(dright > 0){
       cc.log('dright >0')
-      pos.x = pos.x - dright;
+      this.x = this.x - dright;
     }
-
-    if(dtop > 0){
-      pos.y = pos.y - dtop; 
-    }
-
-    if(dbottom > 0 && pos.y < 0){
-      pos.y = pos.y + dbottom;
-    }
-    
-    //不可以往下看啊
-    if(pos.y > 0){ pos.y = 0 }
-    
-    //dleft不判断 暂不允许地图回滚
 
     //当前窗口+滚动宽度大于地图宽度，进入下一个地图
-    if((this.swidth -pos.x) > (this.current_map.width + this.current_map.x) && dright > 0){
+    if((this.swidth - this.x) > (this.current_map.width + this.current_map.x) && dright > 0){
       cc.log('swith map next')
       if(this.chapter_end || !this.switch_next()){
         cc.log('the end of the map')
@@ -134,20 +126,26 @@ var Map = cc.Layer.extend({
         return false
       };
     }
-
+    //dleft不判断 暂不允许地图回滚
+    //移动background
     if(dright > 0){
       this.back.x = this.back.x + dright;
     }
     if(dleft > 0){
       //this.back.x = this.back.x - dleft;
     }
+  },
+  _rollv:function(dtop, dbottom){
+    if(dtop > 0){
+      this.y = this.y - dtop; 
+    }
 
-    this.setPosition(pos);
-    //移动background
-
+    if(dbottom > 0 && this.y < 0){
+      this.y = this.y + dbottom;
+    }
     
-
-
+    //不可以往下看啊
+    if(this.y > 0){ this.y = 0 }
   },
   roll_middle:function(dx, dy){
     //人物固定中间的地图滚动
