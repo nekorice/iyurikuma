@@ -168,7 +168,7 @@ var Battle = cc.Layer.extend({
       var re = this.player.doCollide(this._activeNode[i].collide_rect()); 
       if(re){
         //碰撞了
-        this.player.boom(this._activeNode[i]);
+        this.player.boom(this._activeNode[i], this);
         this.unactiveObject(this._activeNode[i], true);
       }  
     };

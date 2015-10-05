@@ -217,11 +217,12 @@ var Player = cc.Sprite.extend({
   doCollide: function(rect){
     return this.collide.check(this.collide_rect(), rect);
   },
-  boom: function(node){
+  boom: function(node, ui_layer){
     if(node.type = 'yuri'){
       //分数增加
       this.score += 100;
       //update ui
+      ui_layer.lbscore.setString(this.score);
       //node消灭
       node.destroy();
     }else if(node.type = 'enermy'){
