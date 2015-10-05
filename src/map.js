@@ -13,6 +13,11 @@ var Map = cc.Layer.extend({
   map_list:[],
   map_index:0,
   chapter_end:false,
+  //collide object
+  _lastCheck:{'yuri':0, 'enermy':0 },
+  yuri:[],
+  enermy:[],
+  visualObject:[],
   ctor:function (swidth) {
     this._super();
     this.init(swidth);
@@ -44,7 +49,7 @@ var Map = cc.Layer.extend({
       this.anti_para(tileMap);
       //same map cannot be add twice
       this.addChild(tileMap, 1);
-      this.load_object(tileMap);
+      this.load_object(tileMap, start_m);
       //set x pos
       tileMap.x = start_m
       start_m = start_m + tileMap.width; 
@@ -66,13 +71,20 @@ var Map = cc.Layer.extend({
     };
     
   },
-  load_object:function(map){
+  load_object:function(map, start_m){
     //map 也是node 这样滚动map的时候可以直接对应滚动
     //enermy/food 挂载在map上
     //set up enermy
     //map.getObjectGroup("Enermy");
     //set up food
-    //map.getObjectGroup("food");
+    var flower = map.getObjectGroup("flower").getObjects();
+    //objectNamed
+    for (var i = flower.length - 1; i >= 0; i--) {
+      var fo = new Yuri(flower[i], start_m);
+      this.addChild(fo);
+      this.yuri.push(fo);
+    };
+
   },
   load_next:function(){
     //动态加载后面的图
@@ -109,7 +121,7 @@ var Map = cc.Layer.extend({
 
     if(dright > 0 && this.chapter_end ){
       //快速返回
-      return false
+      return false;
     }
 
     if(dright > 0){
@@ -172,10 +184,39 @@ var Map = cc.Layer.extend({
 
     return [dleft,dright, top, bottom]
   },
-  display_left:function(){
+  display_left:function() {
 
   },
-  display_right:function(){
+  display_right:function() {
+
+  },
+  checkVisual:function() {
+    //检查是否可见，在可见范围内的node都加入到app.js里的activeObject
+    //进行碰撞判断
+    //every frame check 10
+    var everyFrame  = 10;
+    var j = 0;
+    for (var i = this._lastCheck['yuri']; (i < this.yuri.length && j <= everyFrame); i++) {
+      var yu = this.yuri[i]
+      if(yu.calc_visible(this.player.x)){
+        this.parent.activeObject(yu);
+      }else{
+        this.parent.unactiveObject(yu);
+      }
+      j++;
+      this._lastCheck['yuri'] = i;
+    };
+
+
+    if(this._lastCheck['yuri'] >= this.yuri.length){
+      this._lastCheck['yuri'] = 0;
+    }
+    
+    /*
+    for (var i = this._lastCheck['enermy']; (i < this.enermy.length && j <= everyFrame); i++) {
+      this.enermy[i].calc_visiable();
+    };
+    */
 
   },
   update:function(dt, ppos){
@@ -183,7 +224,8 @@ var Map = cc.Layer.extend({
     var d = this.calc_roll(ppos, this.swidth);
     //map移动  left right  top  bottom
     this.roll(d[0], d[1], d[2], d[3]);
-  
+    //check map item visual add to app.js collide array
+    this.checkVisual();
   }
 });
 

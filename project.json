@@ -11,14 +11,20 @@
     "modules" : ["cocos2d", "extensions"],
 
     "jsList" : [
+
         "src/utils.js",
         "src/resource.js",
+        
         "src/actions.js",
         "src/move.js",
-        "src/map.js",
         "src/fsm.js",
+        
+        "src/map.js",
+        
         "src/bullet.js",
         "src/player.js",
+        "src/item.js",
+        
         "src/app.js"
     ]
 }

@@ -22,9 +22,10 @@ var res = {
     //music
     //bgm:'res/music/TERRITORY.mp3',
 
+    //texture
+    flower:'res/ui/yuri.png',
+
     //tilemap
-    //map:'res/mario.tmx',
-    //tmx_png:'kuma1.png',
     y_map:'res/yuri.tmx',
     tmx_png:'res/ymap.png',
     tmx_png2:'res/xmap.png',
@@ -34,6 +35,7 @@ var res = {
     kumarun:'res/kumarun.json',
     krp:'res/kumarun0.plist',
     krg:'res/kumarun0.png',
+
     //kumaswing
     kumaswing:'res/kumasw.json',
     kwp:'res/kumasw0.plist',
@@ -41,6 +43,9 @@ var res = {
 }
 
 var g_var = {
+  //
+  'ACTIVE_WIDTH':900,
+  //
   'player_zorder':2,
   'KEYS' : [],
   //地平线
