@@ -1,16 +1,32 @@
 //jquery extends
 
-var Rect = function(){
+var Rect = function(x, y, w, h){
+  //left top点
+  this.x = x;
+  this.y = y;
+  this.w = w;
+  this.h = h;
+  this.center = {'x':x+w/2, 'y':y+h/2}
 
 }
 
 Rect.prototype = {
   constructor:Rect,
-  cross:function(r2){
+  inRect:function(r2){
     var r1 = this;
-    return true;
+
+    var dx = Math.abs(r1.center.x - r2.center.x) - (r1.w + r2.w) / 2  
+    var dy = Math.abs(r1.center.y - r2.center.y) - (r1.h + r2.h) / 2
+    if(dx < 0 && dy < 0){
+      return true;
+    }else{
+      return false;
+    }
   },
 }
+
+//跨frame for
+
 
 
 var TilesHelper = (function(){

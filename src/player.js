@@ -7,6 +7,8 @@
 var ANIMATION_SCALE = 0.6
 
 var Player = cc.Sprite.extend({
+  //ui
+  score:0,
   //动画列表
   act:{},
   //当前动画 class Armature
@@ -14,8 +16,8 @@ var Player = cc.Sprite.extend({
   animate_action:null,
   speed:125,
   //包围盒定义
-  boxWidth:50,
-  boxHeight:50,
+  boxWidth:40,
+  boxHeight:120,
   //动画的朝向
   animate_forword:1,
   ctor:function (p) {
@@ -36,8 +38,9 @@ var Player = cc.Sprite.extend({
     //this.idle();
     
     //未完成    
-    this.collide = new NomalCollide(1);
+    this.collide = new NomalCollide();
     
+
     this.setPosition(p);
     cc.log(this.getPosition());
 
@@ -197,7 +200,7 @@ var Player = cc.Sprite.extend({
   },
   collide_rect:function(){
     //包围盒
-    //this.boundbox = new cc.rect(p.x, p.y, this.width, this.height);
+    return new Rect(this.x, this.y, this.boxWidth, this.boxHeight);
   },
   collide_ground:function(tiles){
     //get tiles
@@ -211,8 +214,16 @@ var Player = cc.Sprite.extend({
     //jump可以往上，但是不能往下
     return ground
   },
-  collide:function(){
-
+  doCollide: function(rect){
+    return this.collide.check(this.collide_rect(), rect);
+  },
+  boom: function(node){
+    if(node.type = 'yuri'){
+      //分数增加
+      this.score += 100;
+      //node消灭
+      node.destroy();
+    }
   },
   update:function(dt){
 

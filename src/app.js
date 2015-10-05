@@ -132,8 +132,8 @@ var Battle = cc.Layer.extend({
       this._activeNode.push(node);
     }
   },
-  unactiveObject: function(node) {
-    if(node.visible){
+  unactiveObject: function(node, force) {
+    if(node.visible || force){
       node.visible = false;
       var index = this._activeNode.indexOf(node);
       this._activeNode.splice(index, 1);
@@ -141,8 +141,19 @@ var Battle = cc.Layer.extend({
   },
   collide: function() {
     //cc.log(this._activeNode)
-    for (var i = this._activeNode.length - 1; i >= 0; i--) {     
+    //每一帧只判断一定数量
+    for (var i = this._activeNode.length - 1; i >= 0; i--) {  
+      //do collide with player
+      var re = this.player.doCollide(this._activeNode[i].collide_rect()); 
+      if(re){
+        //碰撞了
+        this.player.boom(this._activeNode[i]);
+        this.unactiveObject(this._activeNode[i], true);
+      }  
     };
+
+    //player 碰撞 activeObejct [ item, bullet, enermy ]
+    //enermy 碰撞 playerBullet
   },
   update:function(dt){
     //sprite.update

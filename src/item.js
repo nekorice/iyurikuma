@@ -12,6 +12,8 @@ var Item = cc.Sprite.extend({
 
 
 var Yuri = Item.extend({
+  nouse:false,
+  type:'yuri',
   ctor:function (tileObject, offset) {
     //init img
     this._super(res.flower);
@@ -29,12 +31,26 @@ var Yuri = Item.extend({
     this.visible = false;
 
   },
+  collide_rect: function(x) {
+    return new Rect(this.x, this.y, this.width * this.scale, this.height * this.scale);
+  },
   calc_visible: function(x) {
-
-    if(x > this.x + g_var.ACTIVE_WIDTH || x < this.x - g_var.ACTIVE_WIDTH){
+    
+    if(this.nouse || x > this.x + g_var.ACTIVE_WIDTH || x < this.x - g_var.ACTIVE_WIDTH){
       return false
     }
     return true
+  },
+  destroy: function() {
+    this.visible = false;
+    this.nouse = true;
+    if(this.parent){
+      this.parent.removeChild(this, true);
+    }else{
+      cc.log(this);
+      cc.log('parent is null');
+    }
+    
   },
   update: function(dt) {
 

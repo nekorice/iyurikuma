@@ -204,10 +204,9 @@ var Map = cc.Layer.extend({
         this.parent.unactiveObject(yu);
       }
       j++;
-      this._lastCheck['yuri'] = i;
     };
 
-
+    this._lastCheck['yuri'] = i;
     if(this._lastCheck['yuri'] >= this.yuri.length){
       this._lastCheck['yuri'] = 0;
     }
