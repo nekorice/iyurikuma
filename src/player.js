@@ -221,8 +221,14 @@ var Player = cc.Sprite.extend({
     if(node.type = 'yuri'){
       //分数增加
       this.score += 100;
+      //update ui
       //node消灭
       node.destroy();
+    }else if(node.type = 'enermy'){
+      /*
+      this.hp --;
+      update_ui
+      */
     }
   },
   update:function(dt){
@@ -248,13 +254,6 @@ var Player = cc.Sprite.extend({
     this.setPosition(pos);
     //update position
 
-
-
-
-
-    if(g_var.DEBUG){
-      //draw boundbox
-    }
     
     this.last_position = pos;
     return pos 

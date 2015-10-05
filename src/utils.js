@@ -25,6 +25,10 @@ Rect.prototype = {
   },
 }
 
+function drawRect(rect) {
+  
+}
+
 //跨frame for
 
 

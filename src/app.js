@@ -12,6 +12,8 @@ var Battle = cc.Layer.extend({
   spriteFrameIndex:0,
   //collide
   _activeNode:[],
+  //ui
+  passTime:0,
   init:function () {
 
     this._super();
@@ -78,10 +80,29 @@ var Battle = cc.Layer.extend({
     //battle scene && menu
     //menu scene
 
+    //load battle ui
+    this._ui = ccs.uiReader.widgetFromJsonFile(res.battle_ui);
+    //手动居中  960 640
+    this._ui.setPosition(cc.p(size.width / 2 - g_var.DSWIDTH/2, size.height/2 - g_var.DSHEIGHT/2));
+    this._ui.zIndex = 99;
+    this.addChild(this._ui);
+
+    var battlePanel = this.getChildByName('battlePanel');
+    this.lbtime = battlePanel.getChildByName('lbtime');
+    this.lbscore = battlePanel.getChildByName('lbscore');
+    this.lbscore.setString(0);
+
     this.scheduleUpdate();
-    this.schedule(this.update);
+    //this.schedule(this.update);
+    this.schedule(this.clock, 1)
 
     return true;
+  },
+  clock:function(){
+    this.passTime++;
+    var minute = parseInt(this.passTime / 60);
+    var seconds = this.passTime % 60;
+    this.lbtime.setString(minute+ ':' + seconds);
   },
   init_lisener:function(){
     //键盘监听
@@ -158,7 +179,6 @@ var Battle = cc.Layer.extend({
   update:function(dt){
     //sprite.update
     //设定每一帧
-    //this.sprite.update(dt);
     var ppos = this.player.update(dt);
 
     //use this auto follow player
@@ -171,12 +191,16 @@ var Battle = cc.Layer.extend({
     this.collide();
 
 
+    if(g_var.DEBUG){
+      //draw boundbox
+    }
+
   },    
   onTouchesEnded:function (touches, event) {
     this.isMouseDown = false;
   },
   onTouchesCancelled:function (touches, event) {
-    console.log("onTouchesCancelled");
+    cc.log("onTouchesCancelled");
   }
 });
 

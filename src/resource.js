@@ -40,48 +40,37 @@ var res = {
     kumaswing:'res/kumasw.json',
     kwp:'res/kumasw0.plist',
     kwg:'res/kumasw0.png',
+
+    //battle ui
+    battle_ui:'res/ui/battle_ui.json',
+
 }
 
 var g_var = {
   //
-  'ACTIVE_WIDTH':900,
+  'ACTIVE_WIDTH': 900,
+  'DSWIDTH': 960,
+  'DSHEIGHT': 640,
   //
-  'player_zorder':2,
+  'player_zorder': 2,
   'KEYS' : [],
   //地平线
-  'horizon':192,
+  'horizon': 192,
   //重力
-  'gravity':10,
-  'PIXMIN':10,
-  'DEBUG':true,
-  'MAP_ROLLING_SPACE':100,
-  'MAP_SKY_SPACE':200,
-  'scene_map':scene_map,
+  'gravity': 10,
+  'PIXMIN': 10,
+  'DEBUG': true,
+  'MAP_ROLLING_SPACE': 100,
+  'MAP_SKY_SPACE': 200,
+  'scene_map': scene_map,
 }
 
 //这里在preload使用用来提前载入资源
 var g_resources = [
-    //image
-    //s_HelloWorld,
-    //s_CloseNormal,
-    //s_jet,
-    //s_CloseSelected,
-    //s_Walk,
-
-    //s_tmw_desert_spacing,
-    //{src:s_tmw_desert_spacing_hd}, 
-
-    //plist
-    //s_Walk_plist,
-
-    //fnt
-
-    //tmx
-    //s_tmx
-    //bgm
-
-    //effect
-
+  'res/ui/font.fnt',
+  'res/ui/font.png',
+  'res/ui/pow.png',
+  'res/ui/add_box.png',
 ];
 
 for (var i in res) {
