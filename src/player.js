@@ -14,7 +14,7 @@ var Player = cc.Sprite.extend({
   //当前动画 class Armature
   animate:null,
   animate_action:null,
-  speed:125,
+  speed:250,
   //包围盒定义
   boxWidth:40,
   boxHeight:120,

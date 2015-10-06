@@ -57,7 +57,7 @@ var g_var = {
   //地平线
   'horizon': 192,
   //重力
-  'gravity': 10,
+  'gravity': 20,
   'PIXMIN': 10,
   'DEBUG': true,
   'MAP_ROLLING_SPACE': 100,

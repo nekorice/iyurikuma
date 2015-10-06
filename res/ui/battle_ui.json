@@ -208,7 +208,7 @@
           "tag": 10,
           "touchAble": false,
           "useMergedTexture": false,
-          "visible": true,
+          "visible": false,
           "width": 200,
           "x": 223,
           "y": 604,

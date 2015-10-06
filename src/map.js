@@ -39,6 +39,9 @@ var Map = cc.Layer.extend({
     this.back.setPosition(this.width / 2, this.height / 2);
     this.addChild(this.back);
 
+    //use texture cache
+    //var texture = cc.textureCache.addImage(res.flower);
+    this.flowerNode = new cc.SpriteBatchNode(res.flower, 30);
 
     var loading_maps = g_var.scene_map[this.chapter].slice(this.section);
     var start_m = 0
@@ -56,7 +59,8 @@ var Map = cc.Layer.extend({
       this.map_list.push(tileMap);
     };
     
-    cc.log(this.map_list)
+    cc.log(this.map_list);
+    this.addChild(this.flowerNode);
     this.current_map = this.map_list[0]
     //this.tileMap = cc.TMXTiledMap.create(res.map);
     
@@ -81,7 +85,7 @@ var Map = cc.Layer.extend({
     //objectNamed
     for (var i = flower.length - 1; i >= 0; i--) {
       var fo = new Yuri(flower[i], start_m);
-      this.addChild(fo);
+      this.flowerNode.addChild(fo);
       this.yuri.push(fo);
     };
 

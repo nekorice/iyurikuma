@@ -5,7 +5,7 @@
   license: MIT
 */
 
-var Battle = cc.Layer.extend({
+var Battle = cc.LayerColor.extend({
   isMouseDown:false,
   sprite:null,
   //start index
@@ -16,7 +16,7 @@ var Battle = cc.Layer.extend({
   passTime:0,
   init:function () {
 
-    this._super();
+    this._super(cc.color(179, 205, 255, 255));
 
     var size = cc.director.getWinSize();
     //maybe some problem
