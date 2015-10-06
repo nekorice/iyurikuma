@@ -247,7 +247,7 @@ var Player = cc.Sprite.extend({
     var ground_hight = this.collide_ground(this.parent.current_map);
     
     var left = -this.parent.x + this.boxWidth;
-    var right = -this.parent.x+this.parent.swidth;
+    var right = -this.parent.x + this.parent.swidth;
     //防止超过两端
     //dt 地板高度  最左坐标 最右坐标
     var pos = this.handle.move(dt, ground_hight, left, right);

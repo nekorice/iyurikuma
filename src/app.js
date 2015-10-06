@@ -14,6 +14,8 @@ var Battle = cc.LayerColor.extend({
   _activeNode:[],
   //ui
   passTime:0,
+  //battle pause story
+  state:'battle',
   init:function () {
 
     this._super(cc.color(179, 205, 255, 255));
@@ -91,6 +93,10 @@ var Battle = cc.LayerColor.extend({
     this.lbtime = battlePanel.getChildByName('lbtime');
     this.lbscore = battlePanel.getChildByName('lbscore');
     this.lbscore.setString(0);
+    this.btnPause = battlePanel.getChildByName('pauseBtn');
+    this.pausePanel = battlePanel.getChildByName('pausePanel');
+    //btn onclick
+    this.btnPause.addTouchEventListener(this.onPause, this);
 
     this.scheduleUpdate();
     //this.schedule(this.update);
@@ -116,36 +122,55 @@ var Battle = cc.LayerColor.extend({
       onKeyReleased: function(keyCode, event){
         //self.onKeyUp(keyCode);
         self.player.pressKey(keyCode, false);
-        if(keyCode == cc.KEY.back)
-        {
+        if(keyCode == cc.KEY.back) {
           self.back_menu();
         }
-        else if(keyCode == cc.KEY.menu)
-        {
+        else if(keyCode == cc.KEY.menu) {
           cc.log('press menu')
         }
-      }
-    }, this);       
+        else if(keyCode == cc.KEY.b) {
+          g_var.DEBUG = !g_var.DEBUG;
+        }
 
+      }
+    }, this); 
+
+    //触屏监听 
+    var self = this;
+    var touch_listener = cc.EventListener.create({
+      event: cc.EventListener.TOUCH_ALL_AT_ONCE,
+      swallowTouches: true,
+      onTouchesBegan: function (touches, event) {
+        return true
+      },            
+      onTouchesMoved: function (touches, event) {                
+        /*
+        for (var i=0; i < touches.length;i++ ) {
+          var touch = touches[i];
+          //self.onMouseMove(touch);
+        }*/
+      },
+      onTouchesEnded: function (touches, event){
+        self.onTouchesEnded(touches, event);
+      } 
+    });     
+
+    cc.eventManager.addListener(touch_listener, this);
+
+  },
+  onPause: function() {
+    if(this.state == 'battle'){
+      this.state = 'pause';
+      this.pausePanel.visible = true;
+    }   
+  },
+  onResume: function() {
+    this.state = 'battle';
+    this.pausePanel.visible = false;
   },
   // a selector callback
   menuCloseCallback:function (sender) {
     cc.director.end();
-  },
-  onTouchesBegan:function (touches, event) {
-    this.isMouseDown = true;
-    console.log('touches start');
-    console.log(touches);
-
-  },
-  onTouchesMoved:function (touches, event) {
-    if (this.isMouseDown) {
-      if (touches) {
-        console.log(touches)
-        //this.circle.setPosition(touches[0].getLocation().x, touches[0].getLocation().y);
-        //this._jetSprite.handleTouchMove(touches[0].getLocation());
-      }
-    }
   },
   activeObject: function(node) {
     if(!node.visible){
@@ -179,8 +204,10 @@ var Battle = cc.LayerColor.extend({
   update:function(dt){
     //sprite.update
     //设定每一帧
+    if(this.state != 'battle'){
+      return 
+    }
     var ppos = this.player.update(dt);
-
     //use this auto follow player
     //this.map.runAction(cc.follow(this.player));
 
@@ -193,11 +220,32 @@ var Battle = cc.LayerColor.extend({
 
     if(g_var.DEBUG){
       //draw boundbox
+      drawRect(this.player.collide_rect());
+      for (var i = this._activeNode.length - 1; i >= 0; i--) {
+        drawRect(this._activeNode[i].collide_rect());
+      };
     }
 
+  },
+  onTouchesBegan:function (touches, event) {
+   cc.log('touches start');
+  },
+  onTouchesMoved:function (touches, event) {
+    if (this.isMouseDown) {
+      if (touches) {
+        cc.log(touches)
+        //this.circle.setPosition(touches[0].getLocation().x, touches[0].getLocation().y);
+        //this._jetSprite.handleTouchMove(touches[0].getLocation());
+      }
+    }
   },    
   onTouchesEnded:function (touches, event) {
-    this.isMouseDown = false;
+    //this.isMouseDown = false;
+    cc.log('end')
+    if(this.state == 'pause'){
+      this.onResume();
+      cc.log('resume')
+    }
   },
   onTouchesCancelled:function (touches, event) {
     cc.log("onTouchesCancelled");
