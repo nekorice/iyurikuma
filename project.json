@@ -13,6 +13,7 @@
     "jsList" : [
 
         "src/utils.js",
+        "src/effect.js",
         "src/resource.js",
         
         "src/actions.js",
@@ -25,6 +26,7 @@
         "src/player.js",
         "src/item.js",
         
+        "src/menu.js",
         "src/app.js"
     ]
 }

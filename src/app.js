@@ -105,6 +105,9 @@ var Battle = cc.LayerColor.extend({
     return true;
   },
   clock:function(){
+    if(this.state != 'battle'){
+      return false;
+    }
     this.passTime++;
     var minute = parseInt(this.passTime / 60);
     var seconds = this.passTime % 60;

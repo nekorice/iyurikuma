@@ -17,6 +17,7 @@ var res = {
     //d2g:'res/bone/DemoPlayer1.png',
 
     //image
+    loading_png:'res/loading.png',
     background:'res/background.png',
 
     //music
