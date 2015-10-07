@@ -9,6 +9,7 @@ var ANIMATION_SCALE = 0.6
 var Player = cc.Sprite.extend({
   //ui
   score:0,
+  hp:3,
   //动画列表
   act:{},
   //当前动画 class Armature
@@ -225,11 +226,13 @@ var Player = cc.Sprite.extend({
       ui_layer.lbscore.setString(this.score);
       //node消灭
       node.destroy();
-    }else if(node.type = 'enermy'){
-      /*
+    }else if(node.type = 'trap'){
+      
       this.hp --;
-      update_ui
-      */
+      //update_ui
+      this.showHp(ui_layer);
+      //短暂无敌 快速闪烁动画+timeout，去掉无敌符号
+
     }
   },
   update:function(dt){

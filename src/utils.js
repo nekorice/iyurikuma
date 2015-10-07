@@ -30,8 +30,9 @@ function drawRect(rect) {
 }
 
 //跨frame for
+function forperFrame(array, per, target, func){
 
-
+}
 
 var TilesHelper = (function(){
   

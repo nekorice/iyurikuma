@@ -53,13 +53,15 @@ cc.game.onStart = function(){
     var width = 960
     var height = 640
     //close fps display
-    //cc.director.setDisplayStats(true);
+    if(!g_var.DEBUG){
+      cc.director.setDisplayStats(true);  
+    }
     //NO_BORDER   SHOW_ALL for test
     cc.view.setDesignResolutionSize(width, height, cc.ResolutionPolicy.SHOW_ALL);
     cc.view.resizeWithBrowserSize(true);
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
-        cc.director.runScene(new MenuScene());
+        cc.director.runScene(new BattleScene());
     }, this);
 };
 cc.game.run();

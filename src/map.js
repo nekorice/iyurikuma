@@ -14,10 +14,9 @@ var Map = cc.Layer.extend({
   map_index:0,
   chapter_end:false,
   //collide object
-  _lastCheck:{'yuri':0, 'enermy':0 },
+  _lastCheck:{'yuri':0, 'enermy':0, 'trap':0 },
+  entity:{'yuri':[], 'enermy':[], 'trap':[] },
   yuri:[],
-  enermy:[],
-  visualObject:[],
   ctor:function (swidth) {
     this._super();
     this.init(swidth);
@@ -42,6 +41,10 @@ var Map = cc.Layer.extend({
     //use texture cache
     //var texture = cc.textureCache.addImage(res.flower);
     this.flowerNode = new cc.SpriteBatchNode(res.flower, 30);
+    this.trapNode = new cc.SpriteBatchNode(res.trap, 30);
+    //以后合并成一个textrue 使用一个batchnode
+    this.addChild(this.flowerNode);
+    this.addChild(this.trapNode);
 
     var loading_maps = g_var.scene_map[this.chapter].slice(this.section);
     var start_m = 0
@@ -60,7 +63,6 @@ var Map = cc.Layer.extend({
     };
     
     cc.log(this.map_list);
-    this.addChild(this.flowerNode);
     this.current_map = this.map_list[0]
     //this.tileMap = cc.TMXTiledMap.create(res.map);
     
@@ -79,16 +81,21 @@ var Map = cc.Layer.extend({
     //map 也是node 这样滚动map的时候可以直接对应滚动
     //enermy/food 挂载在map上
     //set up enermy
-    //map.getObjectGroup("Enermy");
-    //set up food
-    var flower = map.getObjectGroup("flower").getObjects();
-    //objectNamed
-    for (var i = flower.length - 1; i >= 0; i--) {
-      var fo = new Yuri(flower[i], start_m);
-      this.flowerNode.addChild(fo);
-      this.yuri.push(fo);
-    };
 
+    //set up flower
+    this._load_object(map, start_m, 'yuri', Yuri, this.flowerNode);
+    this._load_object(map, start_m, 'trap', Trap, this.trapNode);
+    //set up trap
+
+  },
+  _load_object: function(map, start_m, group_name, obj, bnode){
+    var obs = map.getObjectGroup(group_name).getObjects();
+    //objectNamed
+    for (var i = obs.length - 1; i >= 0; i--) {
+      var fo = new obj(obs[i], start_m);
+      bnode.addChild(fo);
+      this.entity[group_name].push(fo);
+    };
   },
   load_next:function(){
     //动态加载后面的图
@@ -197,11 +204,17 @@ var Map = cc.Layer.extend({
   checkVisual:function() {
     //检查是否可见，在可见范围内的node都加入到app.js里的activeObject
     //进行碰撞判断
+    
+    this._check_visual('yuri');
+    this._check_visual('trap');
+  },
+  _check_visual:function(key) {
     //every frame check 10
     var everyFrame  = 10;
     var j = 0;
-    for (var i = this._lastCheck['yuri']; (i < this.yuri.length && j <= everyFrame); i++) {
-      var yu = this.yuri[i]
+    var entity = this.entity[key]
+    for (var i = this._lastCheck[key]; (i < entity.length && j <= everyFrame); i++) {
+      var yu = entity[i]
       if(yu.calc_visible(this.player.x)){
         this.parent.activeObject(yu);
       }else{
@@ -210,17 +223,10 @@ var Map = cc.Layer.extend({
       j++;
     };
 
-    this._lastCheck['yuri'] = i;
-    if(this._lastCheck['yuri'] >= this.yuri.length){
-      this._lastCheck['yuri'] = 0;
+    this._lastCheck[key] = i;
+    if(this._lastCheck[key] >= entity.length){
+      this._lastCheck[key] = 0;
     }
-    
-    /*
-    for (var i = this._lastCheck['enermy']; (i < this.enermy.length && j <= everyFrame); i++) {
-      this.enermy[i].calc_visiable();
-    };
-    */
-
   },
   update:function(dt, ppos){
     //地图滚动

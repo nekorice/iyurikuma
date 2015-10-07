@@ -52,7 +52,7 @@ var Yuri = Item.extend({
 
   },
   update: function(dt) {
-
+  
   }
 });
 
@@ -60,7 +60,7 @@ var Trap = Item.extend({
   type:'trap',
   ctor:function (tileObject, offset) {
     //init img
-    this._super(res.flower);
+    this._super(res.trap);
     //come from 2.x
     this.init(tileObject, offset);
   },
@@ -70,7 +70,9 @@ var Trap = Item.extend({
     this.y = tileObject['y'];
     this.bwidth = tileObject['width'];
     this.bheight = tileObject['height'];
-    this.scale = 0.2;
+
+    this.setAnchorPoint(0, 0.1);
+    this.scale = 0.3;
     this.visible = false;
   },
   update: function(dt) {
