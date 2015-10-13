@@ -25,8 +25,10 @@ Rect.prototype = {
   },
 }
 
-function drawRect(rect) {
-  
+function drawRect(rect, dnode) {
+  if(dnode){
+    dnode.drawRect(cc.p(rect.x, rect.y), cc.p(rect.x+rect.w, rect.y+rect.h), null, 2, cc.color(255, 0, 255, 255));
+  }
 }
 
 //跨frame for

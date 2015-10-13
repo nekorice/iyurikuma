@@ -17,8 +17,8 @@ var Player = cc.Sprite.extend({
   animate_action:null,
   speed:250,
   //包围盒定义
-  boxWidth:40,
-  boxHeight:120,
+  boxWidth:34,
+  boxHeight:90,
   //动画的朝向
   animate_forword:1,
   ctor:function (p) {
@@ -27,7 +27,8 @@ var Player = cc.Sprite.extend({
     this.init(p);
   },
   init:function(p){
-
+    
+    this.setAnchorPoint(0, 0);
     this.keyHasPress = {}
     //init 动画
     this.initAnimation();
@@ -58,6 +59,7 @@ var Player = cc.Sprite.extend({
     //不同状态切换 行为？
     //move  jump  idle attack hit
     //specilaction
+
   },
   initAnimation:function(){
     //初始化骨骼动画
@@ -201,7 +203,11 @@ var Player = cc.Sprite.extend({
   },
   collide_rect:function(){
     //包围盒
-    return new Rect(this.x, this.y, this.boxWidth, this.boxHeight);
+    return new Rect(this.x-this.boxWidth/2, this.y, this.boxWidth, this.boxHeight);
+  },
+  draw_collide:function(dnode){
+    dnode.clear();
+    drawRect(this.collide_rect(), dnode);
   },
   collide_ground:function(tiles){
     //get tiles
@@ -219,20 +225,21 @@ var Player = cc.Sprite.extend({
     return this.collide.check(this.collide_rect(), rect);
   },
   boom: function(node, ui_layer){
-    if(node.type = 'yuri'){
+    if(node.type == 'yuri'){
       //分数增加
       this.score += 100;
       //update ui
       ui_layer.lbscore.setString(this.score);
       //node消灭
       node.destroy();
-    }else if(node.type = 'trap'){
+    }else if(node.type == 'trap'){
       
       this.hp --;
       //update_ui
-      this.showHp(ui_layer);
+      ui_layer.showHp(this.hp);
       //短暂无敌 快速闪烁动画+timeout，去掉无敌符号
-
+      //check die
+      node.destroy();
     }
   },
   update:function(dt){
@@ -257,9 +264,8 @@ var Player = cc.Sprite.extend({
     //cc.log(pos);
     this.setPosition(pos);
     //update position
+    this.last_position = pos; 
 
-    
-    this.last_position = pos;
     return pos 
     //return {x:dx, y:dy} 
   }

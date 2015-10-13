@@ -8,6 +8,10 @@
 //cc.SpriteBatchNode
 var Item = cc.Sprite.extend({
   nouse:false,
+  moveable:false,
+  ctor:function (png) {
+    this._super(png);
+  },
   collide_rect: function(x) {
     return new Rect(this.x, this.y, this.width * this.scale, this.height * this.scale);
   },
@@ -17,6 +21,14 @@ var Item = cc.Sprite.extend({
       return false
     }
     return true
+  },
+  draw_collide: function(dnode) {
+    if(!this._draw){
+      //静物只draw一次
+      var r = this.collide_rect()
+      drawRect(r, dnode);
+      this._draw = true;
+    }
   },
   destroy: function() {
     this.visible = false;
@@ -46,10 +58,11 @@ var Yuri = Item.extend({
     this.y = tileObject['y'];
     this.bwidth = tileObject['width'];
     this.bheight = tileObject['height'];
-
+    
+    this.setAnchorPoint(0, 0);
     this.scale = 0.2;
     this.visible = false;
-
+     
   },
   update: function(dt) {
   
@@ -74,6 +87,7 @@ var Trap = Item.extend({
     this.setAnchorPoint(0, 0.1);
     this.scale = 0.3;
     this.visible = false;
+
   },
   update: function(dt) {
 

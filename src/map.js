@@ -31,7 +31,14 @@ var Map = cc.Layer.extend({
 
     //res.scene_map[this.chapter][this.section]
     //this.map_list = res.scene_map[this.chapter];
-    
+
+    if(g_var.DEBUG){
+      this.dnode = new cc.DrawNode();
+      this.snode = new cc.DrawNode();
+      this.addChild(this.dnode, 999);
+      this.addChild(this.snode, 999);
+    }
+
     //背景需要做的超过一屏的分辨率
     //add background image load chapter
     this.back = new cc.Sprite(res.background);
@@ -65,6 +72,7 @@ var Map = cc.Layer.extend({
     cc.log(this.map_list);
     this.current_map = this.map_list[0]
     //this.tileMap = cc.TMXTiledMap.create(res.map);
+
     
   },
   anti_para:function(map){
@@ -93,6 +101,7 @@ var Map = cc.Layer.extend({
     //objectNamed
     for (var i = obs.length - 1; i >= 0; i--) {
       var fo = new obj(obs[i], start_m);
+      fo.draw_collide(this.snode)
       bnode.addChild(fo);
       this.entity[group_name].push(fo);
     };
@@ -235,6 +244,11 @@ var Map = cc.Layer.extend({
     this.roll(d[0], d[1], d[2], d[3]);
     //check map item visual add to app.js collide array
     this.checkVisual();
+
+    if(g_var.DEBUG){
+      this.player.draw_collide(this.dnode);
+    }
+
   }
 });
 

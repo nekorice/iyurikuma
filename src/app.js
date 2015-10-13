@@ -95,6 +95,12 @@ var Battle = cc.LayerColor.extend({
     this.lbscore.setString(0);
     this.btnPause = battlePanel.getChildByName('pauseBtn');
     this.pausePanel = battlePanel.getChildByName('pausePanel');
+    this.hpArray = [
+      battlePanel.getChildByName('hp1'),
+      battlePanel.getChildByName('hp2'),
+      battlePanel.getChildByName('hp3'),
+      battlePanel.getChildByName('hp4'),
+    ]
     //btn onclick
     this.btnPause.addTouchEventListener(this.onPause, this);
 
@@ -112,6 +118,11 @@ var Battle = cc.LayerColor.extend({
     var minute = parseInt(this.passTime / 60);
     var seconds = this.passTime % 60;
     this.lbtime.setString(minute+ ':' + seconds);
+  },
+  showHp:function(hp){
+    for (var i = 3; i >= hp && i >= 0; i--) {
+      this.hpArray[i].visible = false;
+    };
   },
   init_lisener:function(){
     //键盘监听
@@ -219,15 +230,6 @@ var Battle = cc.LayerColor.extend({
 
     //check collide
     this.collide();
-
-
-    if(g_var.DEBUG){
-      //draw boundbox
-      drawRect(this.player.collide_rect());
-      for (var i = this._activeNode.length - 1; i >= 0; i--) {
-        drawRect(this._activeNode[i].collide_rect());
-      };
-    }
 
   },
   onTouchesBegan:function (touches, event) {

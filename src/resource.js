@@ -61,7 +61,7 @@ var g_var = {
   //重力
   'gravity': 20,
   'PIXMIN': 10,
-  'DEBUG': true,
+  'DEBUG': false,
   'MAP_ROLLING_SPACE': 300,
   'MAP_SKY_SPACE': 200,
   'scene_map': scene_map,
