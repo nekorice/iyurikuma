@@ -1,17 +1,40 @@
 //jquery extends
 
-var Rect = function(){
+var Rect = function(x, y, w, h){
+  //left top点
+  this.x = x;
+  this.y = y;
+  this.w = w;
+  this.h = h;
+  this.center = {'x':x+w/2, 'y':y+h/2}
 
 }
 
 Rect.prototype = {
   constructor:Rect,
-  cross:function(r2){
+  inRect:function(r2){
     var r1 = this;
-    return true;
+
+    var dx = Math.abs(r1.center.x - r2.center.x) - (r1.w + r2.w) / 2  
+    var dy = Math.abs(r1.center.y - r2.center.y) - (r1.h + r2.h) / 2
+    if(dx < 0 && dy < 0){
+      return true;
+    }else{
+      return false;
+    }
   },
 }
 
+function drawRect(rect, dnode) {
+  if(dnode){
+    dnode.drawRect(cc.p(rect.x, rect.y), cc.p(rect.x+rect.w, rect.y+rect.h), null, 2, cc.color(255, 0, 255, 255));
+  }
+}
+
+//跨frame for
+function forperFrame(array, per, target, func){
+
+}
 
 var TilesHelper = (function(){
   
@@ -29,7 +52,7 @@ var TilesHelper = (function(){
       var h = tilemap.tileHeight
       var w = tilemap.tileWidth
       //添加一个计算时间可能导致的响应误差
-      pos.y = pos.y + h/3
+      pos.y = pos.y + h/10
       
       return { x:Math.floor(pos.x/w), y:tilemap.mapHeight - Math.floor(pos.y/h)  }
     },

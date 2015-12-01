@@ -52,6 +52,10 @@ cc.game.onStart = function(){
     //get window size
     var width = 960
     var height = 640
+    //close fps display
+    if(!g_var.DEBUG){
+      cc.director.setDisplayStats(true);  
+    }
     //NO_BORDER   SHOW_ALL for test
     cc.view.setDesignResolutionSize(width, height, cc.ResolutionPolicy.SHOW_ALL);
     cc.view.resizeWithBrowserSize(true);

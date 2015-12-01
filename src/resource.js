@@ -17,62 +17,62 @@ var res = {
     //d2g:'res/bone/DemoPlayer1.png',
 
     //image
-    background:'res/back.jpg',
+    loading_png:'res/loading.png',
+    background:'res/background.png',
 
     //music
     //bgm:'res/music/TERRITORY.mp3',
 
+    //texture
+    flower:'res/ui/yuri.png',
+    trap:'res/ui/trap.png',
+
     //tilemap
-    //map:'res/mario.tmx',
-    //tmx_png:'kuma1.png',
     y_map:'res/yuri.tmx',
     tmx_png:'res/ymap.png',
+    tmx_png2:'res/xmap.png',
    
 
     //kumarun
     kumarun:'res/kumarun.json',
     krp:'res/kumarun0.plist',
     krg:'res/kumarun0.png',
+
     //kumaswing
     kumaswing:'res/kumasw.json',
     kwp:'res/kumasw0.plist',
     kwg:'res/kumasw0.png',
+
+    //battle ui
+    battle_ui:'res/ui/battle_ui.json',
+
 }
 
 var g_var = {
-  'player_zorder':2,
+  //
+  'ACTIVE_WIDTH': 900,
+  'DSWIDTH': 960,
+  'DSHEIGHT': 640,
+  //
+  'player_zorder': 2,
   'KEYS' : [],
-  'horizon':100,
-  'gravity':10,
-  'PIXMIN':10,
-  'DEBUG':true,
-  'MAP_ROLLING_SPACE':100,
-  'scene_map':scene_map,
+  //地平线
+  'horizon': 192,
+  //重力
+  'gravity': 20,
+  'PIXMIN': 10,
+  'DEBUG': false,
+  'MAP_ROLLING_SPACE': 300,
+  'MAP_SKY_SPACE': 200,
+  'scene_map': scene_map,
 }
 
 //这里在preload使用用来提前载入资源
 var g_resources = [
-    //image
-    //s_HelloWorld,
-    //s_CloseNormal,
-    //s_jet,
-    //s_CloseSelected,
-    //s_Walk,
-
-    //s_tmw_desert_spacing,
-    //{src:s_tmw_desert_spacing_hd}, 
-
-    //plist
-    //s_Walk_plist,
-
-    //fnt
-
-    //tmx
-    //s_tmx
-    //bgm
-
-    //effect
-
+  'res/ui/font.fnt',
+  'res/ui/font.png',
+  'res/ui/pow.png',
+  'res/ui/add_box.png',
 ];
 
 for (var i in res) {

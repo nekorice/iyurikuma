@@ -8,39 +8,31 @@
 
 NomalCollide = cc.Class.extend({
   rect:null,
-  ctor:function (s) {
+  ctor:function () {
     if(this._super){
-      this._super(s);
+      this._super();
     } 
     //come from 2.x
-    this.init(s);
+    this.init();
   },
-  init:function(s){
-    this.rect = s;
+  init:function(){
+    //
   },   
-  collide:function(rect){
-    /*if(their rect in myrect){
+  check:function(r1, r2){
+    if(r1.inRect(r2)){
       return true;
     }  
     else{
       return false;
-    }*/
-  },
-  collide_rect:function(center){
-    return rect;
+    }
   }
-
 })
 
 
 EmptyCollide = NomalCollide.extend({
-  collide:function(params){
+  check:function(r1, r2){
     return false;
-  },
-  collide_rect:function(center){
-    return null;
   }
-
 })
 
 

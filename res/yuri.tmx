@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" nextobjectid="6">
- <tileset firstgid="1" name="ymap" tilewidth="32" tileheight="32" spacing="2" tilecount="4">
+<map version="1.0" orientation="orthogonal" width="30" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="ymap" tilewidth="32" tileheight="32" spacing="2">
   <image source="ymap.png" width="134" height="32"/>
   <tile id="3">
    <properties>
@@ -8,6 +8,14 @@
    </properties>
   </tile>
  </tileset>
+ <tileset firstgid="5" name="xmap" tilewidth="32" tileheight="32" spacing="1">
+  <image source="xmap.png" trans="ff00ff" width="197" height="32"/>
+ </tileset>
+ <layer name="background" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4B4wE4kHgWjABkQm25G09XIBtRKJ6PpahQMBgAAfE4Blw==
+  </data>
+ </layer>
  <layer name="collide" width="30" height="20">
   <properties>
    <property name="collide" value="1"/>
@@ -16,13 +24,30 @@
    eJxjYBgFo4B4wEIkHgWjABkQm25G09XIBtRKJ6PpahQMBgAAuL0A6Q==
   </data>
  </layer>
- <layer name="map" width="30" height="20">
+ <layer name="map" width="30" height="20" visible="0">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo4B4wEgkHgWjABkQm25G09XIBtRKJ6RipgHCzAOER/1LHwwAnfoBow==
   </data>
  </layer>
- <objectgroup name="player">
-  <object id="3" name="player" x="64" y="416" width="32" height="32"/>
-  <object id="4" name="enermy" x="832" y="256" width="32" height="32"/>
+ <objectgroup name="player" width="0" height="0">
+  <object name="player" x="64" y="416" width="32" height="32"/>
+  <object name="enermy" x="832" y="256" width="32" height="32"/>
  </objectgroup>
+ <objectgroup name="yuri" width="0" height="0">
+  <object name="yuri" x="384" y="352" width="32" height="32"/>
+  <object name="yuri" x="640" y="352" width="32" height="32"/>
+  <object name="yuri" x="512" y="352" width="32" height="32"/>
+  <object name="yuri" x="576" y="192" width="32" height="32"/>
+  <object name="yuri" x="832" y="32" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="trap" width="30" height="20">
+  <object name="trap" x="736" y="416" width="32" height="32"/>
+  <object name="trap" x="704" y="96" width="32" height="32"/>
+  <object name="trap" x="480" y="256" width="32" height="32"/>
+ </objectgroup>
+ <layer name="map2" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFQxVwUChPDmCDYlY8bFYa2DsKqAc4KdBLbppCTiPI6YSQGLr8KKAPAKURapUfHAzEpznkNIBMo7PxyRHSi63MYh/Fo5gGGAA6ZQWd
+  </data>
+ </layer>
 </map>
