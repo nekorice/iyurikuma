@@ -78,13 +78,14 @@ var Battle = cc.LayerColor.extend({
     this.map.player = this.player;
 
     //load enemy 
+    
     var ep = objectLayer.objectNamed('enermy');
     var tm = new Enemy(cc.p(ep['x'], ep['y']))
     //enermy 在 map 中管理,还是在 app 中管理
     this.enermies.push(tm)
     this.map.addChild(tm)
     cc.log("init enemy:" + ep['x'], ep['y'])
-
+    
     this.init_lisener();
 
     //scene 
@@ -234,7 +235,6 @@ var Battle = cc.LayerColor.extend({
     var ppos = this.player.update(dt);
     //use this auto follow player
     //this.map.runAction(cc.follow(this.player));
-
     for (var i = this.enermies.length - 1; i >= 0; i--) {
       this.enermies[i].update(dt);
     };

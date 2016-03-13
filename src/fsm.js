@@ -8,14 +8,15 @@
 
 
 //稍微有点混乱 需要整理
-PlayerFsm = Class.extend({
+var PlayerFsm = Class.extend({
   init: function(host){
     this.host = host;
     this.last_action = 'idle';
     this.last_action_time = 0;
     this.last_action_pass = 0;
+    this.last_action_wait = 0;
     this.state = 'idle';
-    return this;
+    //return this;
   }
 });
 
@@ -23,8 +24,8 @@ PlayerFsm.prototype.wait_action_over = function(dt) {
   //if(state == 'idle'){
   //  return true;
   //}
-  this.last_action_pass += dt; 
-  if(this.last_action_pass >= this.last_action_time){
+  this.last_action_wait += dt; 
+  if(this.last_action_wait >= this.last_action_time){
     cc.log('change');
     return true;
   }
@@ -48,6 +49,7 @@ PlayerFsm.prototype.transform = function(state){
 
   this.last_action = this.state;
   this.last_action_pass = 0;
+  this.last_action_wait = 0;
   var state_time = this.getStateTime()
   this.last_action_time = state_time[this.state]['action_time'];
   this.state = state;
@@ -59,16 +61,25 @@ PlayerFsm.prototype.transform = function(state){
 }
 
 PlayerFsm.prototype.do_state = function(dt) {
-
+  
   if(!this.state){
     return false;
   }
 
+  this.last_action_pass += dt;
+  
   if(this.last_action != this.state){
     //check state 返回>0，则不需要wait上一个动作完成
     //返回<0，则禁止转换
     //返回0 则wait_action_over
-    var r = this['check_'+this.state](dt)
+    var ch = this['check_'+this.state]
+    var r;
+    if(ch !== undefined){
+      r = ch(dt);
+    }else{
+      r = 0;
+    }
+
     if(r < 0){
       return false; 
     }else if(r == 0  && !this.wait_action_over(dt)){
@@ -101,16 +112,7 @@ PlayerFsm.prototype.getStateTime = function(){
     },
     'hit':{
       'action_time':1,
-    },
-    /*
-    'attack':{
-      'normal':{
-        'action_time':1,
-      },
-      'super':{
-        'action_time':5,
-      }
-    }*/
+    }
   } 
   return player_states
 }
@@ -184,7 +186,8 @@ hit
 */
 
 //简单的 ai
-EnemyFsm = PlayerFsm.extend({
+
+var EnemyFsm = PlayerFsm.extend({
   init:function(host){
     this._super(host);
     //check host method
@@ -196,6 +199,7 @@ EnemyFsm = PlayerFsm.extend({
   //貌似这个放在 enemy class 里面更合适
   calcAI:function(){
     var self = this;
+
     switch(this.state){
 
       case "idle":
@@ -209,7 +213,7 @@ EnemyFsm = PlayerFsm.extend({
       case "patrol":
         if(self.host.checkAwake()){
           self.transform("hunting");
-        }else if(self.last_action_pass > 5){
+        }else if(self.last_action_pass > this.host.patrolTime){
           self.transform("idle");
         }
         break;
@@ -230,7 +234,10 @@ EnemyFsm = PlayerFsm.extend({
         if(self.host.isOriginPos === true){
           self.transform("idle");
         }
-        break;      
+        break;  
+
+      case "unknow":
+        cc.log("unknow state")    
     }
   },
   getStateTime:function(){
@@ -255,10 +262,11 @@ EnemyFsm = PlayerFsm.extend({
       },
     } 
     return player_states    
-  },
+  }
 
 })
 
+//未配置 checkstate
 
 
 

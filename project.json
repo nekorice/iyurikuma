@@ -11,8 +11,6 @@
     "modules" : ["cocos2d", "extensions"],
 
     "jsList" : [
-        "bower_components/lodash/lodash.js",
-
 
         "src/basic.js",
         "src/utils.js",

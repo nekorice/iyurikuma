@@ -43,7 +43,8 @@ var Enemy = cc.Sprite.extend({
     //this.bullet = SimpleBullet
     this.fsm.transform('idle');
 
-    this.attack_time = 0.5;
+    this.attackAnimateTime = 0.5;
+    this.patrolTime = 5;
     this.originPos = p;
     //todo  back origin pos
     this.isOriginPos = true;
@@ -97,7 +98,15 @@ var Enemy = cc.Sprite.extend({
   },
   patrol:function(){
     //call back when state move
+    debugger;
     this.change_animation(this.act.run, 'run');
+    if(this.fsm.last_action_pass < this.patrolTime/2){
+      this.handle.forword();
+      this.animate_forword = 1;
+    }else {
+      this.handle.backword();
+      this.animate_forword = -1;
+    }
   },
   hunting:function(){
     this.change_animation(this.act.run, 'run');
@@ -115,7 +124,7 @@ var Enemy = cc.Sprite.extend({
     //只有水平目光
     //视野限制
     return false
-  }
+  },
   checkAttackAble:function(){
     //check cooldown
     //atack range
