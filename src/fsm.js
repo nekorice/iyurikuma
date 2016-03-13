@@ -5,43 +5,21 @@
     license: MIT
 */
 
-//定义动作时间
-var player_states = {
-  'idle':{
-    'action_time':0,
-  },
-  'stop':{
-    'action_time':0,
-  },
-  'move':{
-    //至少0.75 否则会出现转身的错误
-    'action_time':0.75,
-  },
-  'hit':{
-    'action_time':1,
-  },
-  /*
-  'attack':{
-    'normal':{
-      'action_time':1,
-    },
-    'super':{
-      'action_time':5,
-    }
-  }*/
-} 
+
 
 //稍微有点混乱 需要整理
-player_fsm = function(host){
-  this.host = host;
-  this.last_action = 'idle';
-  this.last_action_time = 0;
-  this.last_action_pass = 0;
-  this.state = 'idle';
-  return this;
-}
+PlayerFsm = Class.extend({
+  init: function(host){
+    this.host = host;
+    this.last_action = 'idle';
+    this.last_action_time = 0;
+    this.last_action_pass = 0;
+    this.state = 'idle';
+    return this;
+  }
+});
 
-player_fsm.prototype.wait_action_over = function(dt) {
+PlayerFsm.prototype.wait_action_over = function(dt) {
   //if(state == 'idle'){
   //  return true;
   //}
@@ -55,7 +33,7 @@ player_fsm.prototype.wait_action_over = function(dt) {
 }
 
 //transform
-player_fsm.prototype.transform = function(state){
+PlayerFsm.prototype.transform = function(state){
 
   if(this.state == state){
     //不转换
@@ -70,7 +48,8 @@ player_fsm.prototype.transform = function(state){
 
   this.last_action = this.state;
   this.last_action_pass = 0;
-  this.last_action_time = player_states[this.state]['action_time'];
+  var state_time = this.getStateTime()
+  this.last_action_time = state_time[this.state]['action_time'];
   this.state = state;
 
   //对于attach这种有子类型的如何处理
@@ -79,7 +58,7 @@ player_fsm.prototype.transform = function(state){
   return true
 }
 
-player_fsm.prototype.do_state = function(dt) {
+PlayerFsm.prototype.do_state = function(dt) {
 
   if(!this.state){
     return false;
@@ -97,30 +76,61 @@ player_fsm.prototype.do_state = function(dt) {
     }    
   }
 
-  //之后使用then方法 弄一个类似的jquery deferred的东东
+  //调用宿主的对应 state 名称的方法
   if(this.host[this.state]){
     this.host[this.state]()
+  }else{
+    throw "fsm.js:the State:[{0}] method is not Define in Class {1}".format(this.state, this.host.constructor.name)
   }
   this.last_action = this.state;
   return true;  
 }
 
+PlayerFsm.prototype.getStateTime = function(){
+  //定义动作时间
+  var player_states = {
+    'idle':{
+      'action_time':0,
+    },
+    'stop':{
+      'action_time':0,
+    },
+    'move':{
+      //至少0.75 否则会出现转身的错误
+      'action_time':0.75,
+    },
+    'hit':{
+      'action_time':1,
+    },
+    /*
+    'attack':{
+      'normal':{
+        'action_time':1,
+      },
+      'super':{
+        'action_time':5,
+      }
+    }*/
+  } 
+  return player_states
+}
 
-player_fsm.prototype.check_idle  = function(dt){
+
+PlayerFsm.prototype.check_idle  = function(dt){
   return 0
 }
 
-player_fsm.prototype.check_move  = function(dt){
+PlayerFsm.prototype.check_move  = function(dt){
   //只有idle时，不用wait 
   return 0
 }
 
-player_fsm.prototype.check_attack  = function(dt){
+PlayerFsm.prototype.check_attack  = function(dt){
   //
   return 0
 }
 
-player_fsm.prototype.check_hit  = function(dt){
+PlayerFsm.prototype.check_hit  = function(dt){
   //can be trams from any
   return 0
 }
@@ -171,13 +181,83 @@ move
 
 can_hit
 hit
-
-
 */
 
+//简单的 ai
+EnemyFsm = PlayerFsm.extend({
+  init:function(host){
+    this._super(host);
+    //check host method
+    //idle patrol hunting attack back
+    //attack_time
+    //checkAwake checkAttackAble 
+    //isOriginPos
+  },
+  //貌似这个放在 enemy class 里面更合适
+  calcAI:function(){
+    var self = this;
+    switch(this.state){
 
+      case "idle":
+        if(self.host.checkAwake()){
+          self.transform("hunting");
+        }else if(self.last_action_pass > 0.5){
+          self.transform("patrol");
+        } 
+        break;
+      
+      case "patrol":
+        if(self.host.checkAwake()){
+          self.transform("hunting");
+        }else if(self.last_action_pass > 5){
+          self.transform("idle");
+        }
+        break;
+      
+      case "hunting":
+        if(self.host.checkAttackAble()){
+          self.transform("attack");
+        }else if(self.host.toFar()){
+          self.transform("back");          
+        }
+        break;
 
+      case "attack":
+        self.transform("hunting");
+        break;
+      
+      case "back":
+        if(self.host.isOriginPos === true){
+          self.transform("idle");
+        }
+        break;      
+    }
+  },
+  getStateTime:function(){
+    var self = this;
+    //定义动画时间
+    var player_states = {
+      'idle':{
+        'action_time':0.5,
+      },
+      'patrol':{
+        'action_time':1,
+      },
+      'hunting':{
+        'action_time':1,
+      },
+      'attack':{
+        //as the attack animate 或者直接
+        'action_time':this.host.attackAnimateTime || 0.5,
+      },
+      'back':{
+        'action_time':1,
+      },
+    } 
+    return player_states    
+  },
 
+})
 
 
 

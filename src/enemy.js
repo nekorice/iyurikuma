@@ -1,14 +1,11 @@
 /*
-    File:   player.js
+    File:   enemy.js
     Author: necorice
-    Date:   2014/7/28
+    Date:   2016/3/13
     license: MIT
 */
-var ANIMATION_SCALE = 0.6
 
-var Player = cc.Sprite.extend({
-  //ui
-  score:0,
+var Enemy = cc.Sprite.extend({
   hp:3,
   //动画列表
   act:{},
@@ -16,7 +13,7 @@ var Player = cc.Sprite.extend({
   animate:null,
   animate_action:null,
   speed:250,
-  //包围盒定义
+  //包围盒定义  读配置
   boxWidth:34,
   boxHeight:90,
   //动画的朝向
@@ -33,70 +30,44 @@ var Player = cc.Sprite.extend({
     //init 动画
     this.initAnimation();
 
-    //包含一个移动器，一个碰撞器，一个状态机（动画作为回调），一个动画管理器
+    //包含一个移动器，一个碰撞器，一个状态机，一个动画管理器
 
-    //state
-    this.fsm = new PlayerFsm(this);
-    //this.idle();
-    
-    //未完成    
+    this.fsm = new EnemyFsm(this);
+
     this.collide = new NomalCollide();
     
-
     this.setPosition(p);
     cc.log(this.getPosition());
 
     this.handle = new ClassicMove(p, this.speed);
-    //this.bullet = PlayerBullet
+    //this.bullet = SimpleBullet
+    this.fsm.transform('idle');
 
-    //存储上一帧的位置 用于计算当前位移，来同步滚动地图
-    this.last_position = p;
-
-    //animation 和状态机绑定
-    //state 状态机
-    // -- state --> animation  action
-    //状态 对应的判断，动画 
-    //不同状态切换 行为？
-    //move  jump  idle attack hit
-    //specilaction
+    this.attack_time = 0.5;
+    this.originPos = p;
+    //todo  back origin pos
+    this.isOriginPos = true;
 
   },
   initAnimation:function(){
     //初始化骨骼动画
     //manager 管理 预加载
-    armatureDataManager= ccs.armatureDataManager;
-    //load json
-    //add plist and png in resource.js
+    //动画需要统一管理
+    armatureDataManager = ccs.armatureDataManager;
+    //是否可以复用
     armatureDataManager.addArmatureFileInfo(res.kumarun);
-    armatureDataManager.addArmatureFileInfo(res.kumaswing);
-    //see name in json
+
+
+    //这里是单独的初始化
     //return ccs.ArmatureAnimation
     var armature = ccs.Armature.create("kumarun");
-    var kumaswing = ccs.Armature.create("kumasw");
     //see action
-    //armature.getAnimation().playWithIndex(2);
-    //armature.getAnimation().play('run');
-    //kumaswing.getAnimation().play('swing');
-    
-    //armature.stop()
-    //armature.pause()
-    kumaswing.scale = ANIMATION_SCALE;
-    kumaswing.setLocalZOrder(999);
-
     armature.scale = ANIMATION_SCALE;
     armature.setLocalZOrder(999);
-    //反向
-    //armature.setScaleX(-0.6);
-    //armature.scaleY = 0.6
-    
+  
     this.act.run = armature;
-    this.act.swing = kumaswing;
-
     armature.visible = false;
-    kumaswing.visible = false;
-
     this.addChild(armature); 
-    this.addChild(kumaswing);
   },
   change_animation:function(act, action) {
     //相同动画不重新播放，只是处理转头
@@ -117,89 +88,39 @@ var Player = cc.Sprite.extend({
     this.animate_action = action;
     this.animate.getAnimation().play(action);    
   },
+  //idle patrol hunting attack back
+  //attack_time
+  //checkAwake checkAttackAble 
   idle:function() {
-    //animation
-    //this.state = "idle";
-    //maybe not stop just pause
-    
-    //set run = false;
-    //maybe use state
     this.handle.stopmove();
-    this.change_animation(this.act.run, 'stop');
-    //this.change_animation(this.act.swing, 'swing');
-    
+    this.change_animation(this.act.run, 'stop');    
   },
-  move:function(){
+  patrol:function(){
     //call back when state move
     this.change_animation(this.act.run, 'run');
   },
-  stop:function(){
-    this.change_animation(this.act.run, 'stop');
-  },
-  handleKey:function(dt){
-    //持续性的动作在这里处理
-    //每一帧的按键处理
-    if( cc.KEY.right in this.keyHasPress){
-      this.handle.forword();
-      this.animate_forword = 1;
-    }else if( cc.KEY.left in this.keyHasPress){
-      this.handle.backword();
-      this.animate_forword = -1;
-    }
-  },
-  pressKey:function(key, press){
-    /** 
-      press: true-press false-release 
-    */
-
-    //记录按键状态和发送状态机指令
-    //key up 事件
-    //press
-    if(press){
-      
-      this.keyHasPress[key] = true;
-
-      switch(key){
-        case cc.KEY.right:
-          //add forword speed
-          this.fsm.transform('move');
-          break;
-        case cc.KEY.left:
-          //add back speed
-          this.fsm.transform('move');
-          break;
-        case cc.KEY.x:
-          //jump
-          console.log('jump')
-          this.handle.dojump();
-          break;
-      }
-
-    }else{
-
-      delete this.keyHasPress[key];
-      switch(key){
-        case cc.KEY.right:
-          if(!this.keyHasPress[cc.KEY.left]){
-            this.fsm.transform('idle');
-          }
-          break;
-        case cc.KEY.left:
-          if(!this.keyHasPress[cc.KEY.right]){
-            this.fsm.transform('idle');
-          }
-          break;
-        case cc.KEY.x:
-          break;
-      }
-    }
+  hunting:function(){
+    this.change_animation(this.act.run, 'run');
     
-    return this.getPosition();
   },
-  on_touch:function(touch){
-    //touch to move
+  attack:function(){
+    //this.change_animation(this.act.run, 'attack');
+    //bullet
+  },
+  back:function(){
+    //todo
+  },
+  checkAwake:function(){
+    //当 player 靠近一定程度 
+    //只有水平目光
+    //视野限制
+    return false
+  }
+  checkAttackAble:function(){
+    //check cooldown
+    //atack range
 
-
+    return false   
   },
   collide_rect:function(){
     //包围盒
@@ -219,12 +140,14 @@ var Player = cc.Sprite.extend({
     var ground = TilesHelper.getGround(tiles, tpos);
 
     //jump可以往上，但是不能往下
+    //to do 下跳
     return ground
   },
   doCollide: function(rect){
     return this.collide.check(this.collide_rect(), rect);
   },
   boom: function(node, ui_layer){
+    /*
     if(node.type == 'yuri'){
       //分数增加
       this.score += 100;
@@ -241,22 +164,17 @@ var Player = cc.Sprite.extend({
       
       //check die
       node.destroy();
-    }
+    }*/
   },
   update:function(dt){
-
-    //key的响应只改变运动参数（速度，加速度，方向）
-    //更新在update中通过其他函数处理完成
-    this.handleKey(dt);
-
     //切换状态的cd时间 在状态机中定义
+    this.fsm.calcAI()
     this.fsm.do_state(dt);
 
-    //this.parent == maplayer
-    //get 地面高度
     //不能使用current map  此函数应该放到map里面  为了实现回到旧的地图  
     var ground_hight = this.collide_ground(this.parent.current_map);
     
+    //null或者 undefined 表示不限制
     var left = -this.parent.x + this.boxWidth;
     var right = -this.parent.x + this.parent.swidth;
     //防止超过两端
@@ -264,11 +182,7 @@ var Player = cc.Sprite.extend({
     var pos = this.handle.move(dt, ground_hight, left, right);
     //cc.log(pos);
     this.setPosition(pos);
-    //update position
-    this.last_position = pos; 
-
     return pos 
-    //return {x:dx, y:dy} 
   }
 })
 

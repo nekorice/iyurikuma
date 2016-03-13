@@ -16,6 +16,9 @@ var Battle = cc.LayerColor.extend({
   passTime:0,
   //battle pause story
   state:'battle',
+  //active entity
+  enermies:[],
+
   init:function () {
 
     this._super(cc.color(179, 205, 255, 255));
@@ -54,26 +57,33 @@ var Battle = cc.LayerColor.extend({
     //从tilemap上读取信息
 
     // 获得对象层
-    var objectLayer = this.map.current_map.getObjectGroup("player");
+    var objectLayer = this.map.current_map.getObjectGroup('player');
     //var array = objectLayer.getObjects();
 
     //获得对象的点
     //只能够获得数组 需要用name来区分
     var spawnPoint = objectLayer.objectNamed('player');
-    var objX = spawnPoint["x"];
-    var objY = spawnPoint["y"];
-    //var width = spawnPoint["width"];
-    //var height = spawnPoint["height"]; 
-    cc.log(spawnPoint["name"])
+    var objX = spawnPoint['x'];
+    var objY = spawnPoint['y'];
+    //var width = spawnPoint['width'];
+    //var height = spawnPoint['height']; 
+    cc.log(spawnPoint['name'])
     cc.log(objX);
     cc.log(objY);
     //var pleft = array[1];
      
-    //200 -> test
     this.player = new Player(cc.p(objX,objY));
     //player应当挂接到map上
     this.map.addChild(this.player);
     this.map.player = this.player;
+
+    //load enemy 
+    var ep = objectLayer.objectNamed('enermy');
+    var tm = new Enemy(cc.p(ep['x'], ep['y']))
+    //enermy 在 map 中管理,还是在 app 中管理
+    this.enermies.push(tm)
+    this.map.addChild(tm)
+    cc.log("init enemy:" + ep['x'], ep['y'])
 
     this.init_lisener();
 
@@ -225,6 +235,10 @@ var Battle = cc.LayerColor.extend({
     //use this auto follow player
     //this.map.runAction(cc.follow(this.player));
 
+    for (var i = this.enermies.length - 1; i >= 0; i--) {
+      this.enermies[i].update(dt);
+    };
+
     //map update dt
     this.map.update(dt, ppos);
 
@@ -253,7 +267,7 @@ var Battle = cc.LayerColor.extend({
     }
   },
   onTouchesCancelled:function (touches, event) {
-    cc.log("onTouchesCancelled");
+    cc.log('onTouchesCancelled');
   }
 });
 
