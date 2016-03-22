@@ -39,16 +39,18 @@ var Enemy = cc.Sprite.extend({
     this.setPosition(p);
     cc.log(this.getPosition());
 
-    this.handle = new ClassicMove(p, this.speed);
+    this.handle = new StaticMove(p, this.speed);
     //this.bullet = SimpleBullet
     this.fsm.transform('idle');
 
     this.attackAnimateTime = 0.5;
-    this.patrolTime = 5;
-    this.originPos = p;
+    this.patrolTime = 3;
+    //deep copy
+    this.originPos = {x:p.x,y:p.y};
     //todo  back origin pos
     this.isOriginPos = true;
-
+    //
+    this.patrolLength = 50; 
   },
   initAnimation:function(){
     //初始化骨骼动画
@@ -98,31 +100,34 @@ var Enemy = cc.Sprite.extend({
   },
   patrol:function(){
     //call back when state move
-    debugger;
     this.change_animation(this.act.run, 'run');
-    if(this.fsm.last_action_pass < this.patrolTime/2){
-      this.handle.forword();
-      this.animate_forword = 1;
-    }else {
-      this.handle.backword();
-      this.animate_forword = -1;
-    }
+    this.handle.patrol(this.originPos.x - this.patrolLength, this.originPos.x + this.patrolLength);
+    this.animate_forword = this.handle.isForword ? 1 : -1
   },
   hunting:function(){
     this.change_animation(this.act.run, 'run');
+    this.handle.hunting(this.targetPos.x)
     
   },
   attack:function(){
     //this.change_animation(this.act.run, 'attack');
+    this.handle.stopmove();
     //bullet
   },
   back:function(){
     //todo
+    this.handle.back(this.originPos.x);
   },
   checkAwake:function(){
     //当 player 靠近一定程度 
     //只有水平目光
     //视野限制
+    //在碰撞检测里面做 只碰撞 playerObject List(player, 子弹,和友军) 
+
+    //set targetPos
+    if(this.targetPos){
+
+    } 
     return false
   },
   checkAttackAble:function(){
@@ -190,6 +195,8 @@ var Enemy = cc.Sprite.extend({
     //dt 地板高度  最左坐标 最右坐标
     var pos = this.handle.move(dt, ground_hight, left, right);
     //cc.log(pos);
+    //check is back to oripos
+    this.isOriginPos = pos.x - this.originPos.x < g_var.PIXMIN
     this.setPosition(pos);
     return pos 
   }

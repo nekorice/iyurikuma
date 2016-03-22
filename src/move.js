@@ -5,9 +5,19 @@
     license: MIT
 */
 
+/**
+  move 用来处理最后的移动
+       包括控制 x 向量和 y 向量,弹跳等
+       反向是用负数表示
+       move 中没有使用变量来判断前进后退
+
+  其他函数都是用来改变状态和速度的向量,来传递当前状态
+
+*/
+
 ClassicMove = cc.Class.extend({
   pos:null,
-  max_speed:null,
+  maxSpeed:null,
   x_op:0,
   y_op:0,
   per_speed:3,
@@ -24,12 +34,14 @@ ClassicMove = cc.Class.extend({
     //assert(speed);
 
     this.pos = pos;
-    this.max_speed = speed;
+    this.maxSpeed = speed;
     this.jump = false;
     this.speed = 0;
     this.speed_y = 0;
     this.gravity = g_var.gravity
     this.run = false;
+    //二级跳
+    this.jumpLimit = 2;
   },
   forword:function(dt){
     if(this.speed < 0){ 
@@ -37,7 +49,7 @@ ClassicMove = cc.Class.extend({
       this.speed = this.per_speed
     }
 
-    if(this.speed < this.max_speed ){
+    if(this.speed < this.maxSpeed ){
       this.speed += this.per_speed;
     }
 
@@ -47,7 +59,7 @@ ClassicMove = cc.Class.extend({
   backword:function(dt){
     if(this.speed > 0 ){  this.speed = -this.per_speed  }
 
-    if(this.speed > -this.max_speed){
+    if(this.speed > -this.maxSpeed){
       this.speed -= this.per_speed;
     }    
     this.run = true;
@@ -101,7 +113,7 @@ ClassicMove = cc.Class.extend({
 
     //设定下落速度极限 为jump值
     if(this.speed_y > -this.jump_speed){
-      this.speed_y = this.speed_y - this.gravity
+      this.speed_y = this.speed_y - this.gravity * 60 * dt
     }else{
       this.speed_y = -this.jump_speed
     }
@@ -120,7 +132,7 @@ ClassicMove = cc.Class.extend({
   },
   dojump:function(dt){
     //触发jump状态
-    if(this.jump <= 1){
+    if(this.jump < this.jumpLimit){
       //do jump
       this.speed_y = this.jump_speed;
       //二段跳得设置
@@ -131,4 +143,66 @@ ClassicMove = cc.Class.extend({
 });
 
 TestMove = ClassicMove.extend({});
+
+StaticMove = ClassicMove.extend({
+  init:function(pos, speed){
+    //assert(pos);
+    //assert(speed);
+
+    this.pos = pos;
+    this.maxSpeed = speed;
+    this.speed = 0;
+    this.jump = false;
+    this.speed_y = 0;
+    this.gravity = g_var.gravity
+    this.run = false;
+    this.jumpLimit = 1;
+    this.isForword = true;
+  },
+  forword:function(rate){
+    this.speed = this.maxSpeed * rate
+    this.run = true;
+    this.isForword = true; 
+    return this.pos
+  },
+  backword:function(rate){
+    this.speed = -this.maxSpeed * rate
+    this.run = true;
+    this.isForword = false;
+    return this.pos
+  },
+  stopmove:function(dt){
+    this.speed = 0
+    this.run = false;
+    return this.pos;  
+  },
+  patrol: function(startX, endX) {
+       
+    if(this.isForword){
+      if(this.pos.x >= endX){
+        this.backword(0.5);
+        return
+      }else{
+        this.forword(0.5);
+        return 
+      }      
+    }else{
+      if(this.pos.x <= startX){
+        this.forword(0.5);
+        return
+      }else{
+        this.backword(0.5);
+      }
+    }
+  },
+  hunting: function(targetX) {
+    if(this.pos.x >= targetX){
+      this.backword(1);
+    }else{
+      this.forword(1);
+    }
+  },
+
+
+})
 

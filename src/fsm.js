@@ -89,9 +89,9 @@ PlayerFsm.prototype.do_state = function(dt) {
 
   //调用宿主的对应 state 名称的方法
   if(this.host[this.state]){
-    this.host[this.state]()
+    this.host[this.state]();
   }else{
-    throw "fsm.js:the State:[{0}] method is not Define in Class {1}".format(this.state, this.host.constructor.name)
+    throw "fsm.js:the State:[{0}] method is not Define in Class {1}".format(this.state, this.host.constructor.name);
   }
   this.last_action = this.state;
   return true;  
@@ -205,7 +205,7 @@ var EnemyFsm = PlayerFsm.extend({
       case "idle":
         if(self.host.checkAwake()){
           self.transform("hunting");
-        }else if(self.last_action_pass > 0.5){
+        }else if(self.last_action_pass > 2.5){
           self.transform("patrol");
         } 
         break;
@@ -248,7 +248,7 @@ var EnemyFsm = PlayerFsm.extend({
         'action_time':0.5,
       },
       'patrol':{
-        'action_time':1,
+        'action_time':0,
       },
       'hunting':{
         'action_time':1,
