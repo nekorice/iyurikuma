@@ -50,7 +50,7 @@ var Enemy = cc.Sprite.extend({
     //todo  back origin pos
     this.isOriginPos = true;
     //
-    this.patrolLength = 50; 
+    this.patrolLength = 100; 
   },
   initAnimation:function(){
     //初始化骨骼动画

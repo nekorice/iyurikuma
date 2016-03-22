@@ -118,10 +118,10 @@ ClassicMove = cc.Class.extend({
       this.speed_y = -this.jump_speed
     }
     
-    if(this.pos.x < max_left){
+    if(max_left !== undefined && this.pos.x < max_left){
       this.pos.x = max_left;
     }
-    if(this.pos.x > max_right){
+    if(max_right !== undefined && this.pos.x > max_right){
       this.pos.x = max_right;
     }
 
@@ -202,7 +202,10 @@ StaticMove = ClassicMove.extend({
       this.forword(1);
     }
   },
-
+  move: function(dt, ground, max_left, max_right){
+    //call super
+    return this._super(dt, ground);
+  }
 
 })
 
