@@ -12,7 +12,9 @@ var Enemy = cc.Sprite.extend({
   //当前动画 class Armature
   animate:null,
   animate_action:null,
-  speed:250,
+  //make enemy slow than player
+  speed:200,
+  awakeDis:150,
   //包围盒定义  读配置
   boxWidth:34,
   boxHeight:90,
@@ -37,7 +39,7 @@ var Enemy = cc.Sprite.extend({
     this.collide = new NomalCollide();
     
     this.setPosition(p);
-    cc.log(this.getPosition());
+    //cc.log(this.getPosition());
 
     this.handle = new StaticMove(p, this.speed);
     //this.bullet = SimpleBullet
@@ -105,9 +107,18 @@ var Enemy = cc.Sprite.extend({
     this.animate_forword = this.handle.isForword ? 1 : -1
   },
   hunting:function(){
-    this.change_animation(this.act.run, 'run');
-    this.handle.hunting(this.targetPos.x)
+    if(this.handle.speed == 0){
+      this.change_animation(this.act.run, 'stop');
+    }else{
+      this.change_animation(this.act.run, 'run');
+    }
+    this.targetPos = this.parent.playerPos();
+    this.handle.hunting(this.targetPos.x);
+    this.animate_forword = this.handle.isForword ? 1 : -1
     
+  },
+  toFar:function(){
+    return false;
   },
   attack:function(){
     //this.change_animation(this.act.run, 'attack');
@@ -119,20 +130,24 @@ var Enemy = cc.Sprite.extend({
     this.handle.back(this.originPos.x);
   },
   checkAwake:function(){
+    //当隐藏时 不判断
+    //if(this.isHiden){return false}
+
+    var pos = this.parent.playerPos();
     //当 player 靠近一定程度 
     //只有水平目光
     //视野限制
-    //在碰撞检测里面做 只碰撞 playerObject List(player, 子弹,和友军) 
-
-    //set targetPos
-    if(this.targetPos){
-
-    } 
+    if(pos.x > this.x - this.awakeDis && pos.x < this.x + this.awakeDis && 
+pos.y > this.y - 100 && pos.y < this.y + 100 ){
+      console.log('awakinnnnnnng')
+      return true
+    }
     return false
   },
   checkAttackAble:function(){
     //check cooldown
     //atack range
+    //use bullet
 
     return false   
   },
@@ -161,6 +176,7 @@ var Enemy = cc.Sprite.extend({
     return this.collide.check(this.collide_rect(), rect);
   },
   boom: function(node, ui_layer){
+    //在碰撞检测里面做 只碰撞 playerObject List(player, 子弹,和友军) 
     /*
     if(node.type == 'yuri'){
       //分数增加
@@ -182,7 +198,7 @@ var Enemy = cc.Sprite.extend({
   },
   update:function(dt){
     //切换状态的cd时间 在状态机中定义
-    this.fsm.calcAI()
+    this.fsm.calcAI();
     this.fsm.do_state(dt);
 
     //不能使用current map  此函数应该放到map里面  为了实现回到旧的地图  

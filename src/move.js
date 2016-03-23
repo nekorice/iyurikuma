@@ -20,7 +20,7 @@ ClassicMove = cc.Class.extend({
   maxSpeed:null,
   x_op:0,
   y_op:0,
-  per_speed:3,
+  per_speed:7,
   jump_speed:650,
   ctor:function (pos, sp) {
     if(this._super){
@@ -151,6 +151,7 @@ StaticMove = ClassicMove.extend({
 
     this.pos = pos;
     this.maxSpeed = speed;
+    this.per_speed = 25;
     this.speed = 0;
     this.jump = false;
     this.speed_y = 0;
@@ -160,13 +161,19 @@ StaticMove = ClassicMove.extend({
     this.isForword = true;
   },
   forword:function(rate){
-    this.speed = this.maxSpeed * rate
+    if(this.speed < this.maxSpeed ){
+      this.speed += this.per_speed;
+    }
+    this.speed = this.speed * rate
     this.run = true;
     this.isForword = true; 
     return this.pos
   },
   backword:function(rate){
-    this.speed = -this.maxSpeed * rate
+    if(this.speed > -this.maxSpeed){
+      this.speed -= this.per_speed;
+    } 
+    this.speed = this.speed * rate
     this.run = true;
     this.isForword = false;
     return this.pos
@@ -180,26 +187,30 @@ StaticMove = ClassicMove.extend({
        
     if(this.isForword){
       if(this.pos.x >= endX){
-        this.backword(0.5);
+        this.backword(0.7);
         return
       }else{
-        this.forword(0.5);
+        this.forword(0.7);
         return 
       }      
     }else{
       if(this.pos.x <= startX){
-        this.forword(0.5);
+        this.forword(0.7);
         return
       }else{
-        this.backword(0.5);
+        this.backword(0.7);
       }
     }
   },
   hunting: function(targetX) {
-    if(this.pos.x >= targetX){
+    //10 = 追击缓冲
+    var stopDis = 10
+    if(this.pos.x >= targetX + stopDis){
       this.backword(1);
-    }else{
+    }else if (this.pos.x <= targetX - stopDis){
       this.forword(1);
+    }else{
+      this.stopmove();
     }
   },
   move: function(dt, ground, max_left, max_right){
@@ -208,4 +219,8 @@ StaticMove = ClassicMove.extend({
   }
 
 })
+
+PathMove = StaticMove.extend({
+  //物体 按照一条路径移动
+});
 

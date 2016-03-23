@@ -237,6 +237,9 @@ var Map = cc.Layer.extend({
       this._lastCheck[key] = 0;
     }
   },
+  playerPos:function(){
+    return this.player.getPosition()
+  },
   update:function(dt, ppos){
     //地图滚动
     var d = this.calc_roll(ppos, this.swidth);

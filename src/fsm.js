@@ -234,7 +234,11 @@ var EnemyFsm = PlayerFsm.extend({
         if(self.host.isOriginPos === true){
           self.transform("idle");
         }
-        break;  
+        break; 
+
+      case "hidden":
+        //隐藏元素 不使用逻辑        
+        break; 
 
       case "unknow":
         cc.log("unknow state")    
@@ -244,6 +248,9 @@ var EnemyFsm = PlayerFsm.extend({
     var self = this;
     //定义动画时间
     var player_states = {
+      'hidden':{
+        'action_time':0,
+      },
       'idle':{
         'action_time':0.5,
       },
@@ -255,10 +262,10 @@ var EnemyFsm = PlayerFsm.extend({
       },
       'attack':{
         //as the attack animate 或者直接
-        'action_time':this.host.attackAnimateTime || 0.5,
+        'action_time':this.host.attackAnimateTime !== undefined ? 0.5 : this.host.attackAnimateTime,
       },
       'back':{
-        'action_time':1,
+        'action_time':0,
       },
     } 
     return player_states    
