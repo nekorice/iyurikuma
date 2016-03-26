@@ -53,6 +53,7 @@ var Enemy = cc.Sprite.extend({
     this.isOriginPos = true;
     //
     this.patrolLength = 100; 
+    this.test = 0;
   },
   initAnimation:function(){
     //初始化骨骼动画
@@ -121,8 +122,9 @@ var Enemy = cc.Sprite.extend({
     return false;
   },
   attack:function(){
-    //this.change_animation(this.act.run, 'attack');
+    this.change_animation(this.act.run, 'stop');
     this.handle.stopmove();
+    console.log('Im attacking');
     //bullet
   },
   back:function(){
@@ -148,7 +150,10 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
     //check cooldown
     //atack range
     //use bullet
-
+    this.test++;
+    if(this.test % 120 == 0){
+      return true
+    }
     return false   
   },
   collide_rect:function(){

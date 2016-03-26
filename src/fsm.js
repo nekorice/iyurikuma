@@ -258,7 +258,7 @@ var EnemyFsm = PlayerFsm.extend({
         'action_time':0,
       },
       'hunting':{
-        'action_time':1,
+        'action_time':0,
       },
       'attack':{
         //as the attack animate 或者直接
