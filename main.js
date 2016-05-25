@@ -50,10 +50,11 @@
 cc.game.onStart = function(){
     cc.view.adjustViewPort(true);
     //get window size
-    var width = 960
-    var height = 640
+    var width = 960;
+    var height = 640;
+    var DEBUG = true;
     //close fps display
-    if(!g_var.DEBUG){
+    if(DEBUG){
       cc.director.setDisplayStats(true);  
     }
     //NO_BORDER   SHOW_ALL for test

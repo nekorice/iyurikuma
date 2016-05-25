@@ -136,6 +136,31 @@ var Player = cc.Sprite.extend({
   stop:function(){
     this.change_animation(this.act.run, 'stop');
   },
+  handle_cooldown: function(dt){
+    if(this.bullet_time){
+      this.bullet_time += dt;
+    } 
+  },
+  emitBullet: function(dt){
+    //还要分不同的种类
+    if(!this.bullet_time){
+      this.bullet = new Bullet(this.getPosition());
+      this.parent.addChild(this.bullet);  
+      this.bullet.emit();
+      this.bullet_time = 0;       
+    }
+    //多种 bullet 有不同的 cooldown
+    //get bullet cooldown
+    //this.cooldown = 
+    this.bullet_time += dt;
+    if(this.bullet_time > this.bullet.cooldown){
+      this.bullet_time = 0;
+      this.bullet = new Bullet(this.getPosition());
+      this.parent.addChild(this.bullet);  
+      this.bullet.emit();
+    }
+
+  },
   handleKey:function(dt){
     //持续性的动作在这里处理
     //每一帧的按键处理
@@ -146,6 +171,11 @@ var Player = cc.Sprite.extend({
       this.handle.backword();
       this.animate_forword = -1;
     }
+    
+    if(cc.KEY.c in this.keyHasPress){
+      this.emitBullet(dt);
+    }
+
   },
   pressKey:function(key, press){
     /** 
@@ -248,6 +278,8 @@ var Player = cc.Sprite.extend({
     //key的响应只改变运动参数（速度，加速度，方向）
     //更新在update中通过其他函数处理完成
     this.handleKey(dt);
+
+    this.handle_cooldown(dt);
 
     //切换状态的cd时间 在状态机中定义
     this.fsm.do_state(dt);

@@ -16,6 +16,10 @@ var res = {
     //d2:'res/bone/DemoPlayer1.plist',
     //d2g:'res/bone/DemoPlayer1.png',
 
+    //animate frame
+    s_Walk: "res/tmagic.png",
+    s_Walk_plist: "res/tmagic.plist",
+
     //image
     loading_png:'res/loading.png',
     background:'res/background.png',
