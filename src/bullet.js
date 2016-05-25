@@ -16,14 +16,13 @@ Bullet = cc.Sprite.extend({
       this._super();
     } 
 
-    this.init(point);
+    this.init(point, reverse_x);
   },
   init:function(point, reverse_x){
 
     //frame animate helper
     this.walk_prefix = "fire"
-    //this.will be load only one
-    cc.spriteFrameCache.addSpriteFrames(res.s_Walk_plist, res.s_Walk);
+
     this.initWithSpriteFrameName(this.walk_prefix + "1.png");
 
     var animFrames = [];
@@ -52,6 +51,7 @@ Bullet = cc.Sprite.extend({
     //碰撞列表为：1，player和友军 2.自己和友军子弹 3.敌军子弹 4 地形（子弹是否需要和地形交互） 5 敌人
     //player的碰撞由player处理
     this.collide = new NomalCollide();
+    this.isDestory = true;
 
     //get this.height
     //this.width
@@ -65,6 +65,8 @@ Bullet = cc.Sprite.extend({
     this.scheduleUpdate();
   },
   isOutOfScreen: function(){
+    //当加入到 map 的 child 中就不能这么判断了
+    //nouseful
     var pos  = this.getPosition();
     var size = cc.director.getWinSize();
     //bullet pos是屏幕的相对坐标
@@ -72,6 +74,14 @@ Bullet = cc.Sprite.extend({
       return true
     }
     return false
+  },
+  reuse: function(point, reverse_x){
+    this.setPosition(point.x + this.width/2, point.y + this.height/2)
+    this.reverse = 1;
+    if(reverse_x){
+      this.reverse = -1;
+    }
+    this.resue = true;
   },
   doCollide: function(rect){
     //碰撞统一由场景管理
@@ -95,7 +105,37 @@ all the bullets are rendered by one spritesheet,
 */
 
 //重复利用的 bullet pool
-BulletPool = cc.Class.extend({})
+BulletPool = cc.Class.extend({
+  ctor:function() {
+    if(this._super){
+      this._super();
+    } 
+    this.init();
+  },
+  init:function(){
+    //this.will be load only one
+    cc.spriteFrameCache.addSpriteFrames(res.s_Walk_plist, res.s_Walk);
+    this.bullet_poll = {}
+  },
+  get_bullet:function(tp, pos, reverse_x){
+    //get tp bullet
+    if(!this.bullet_poll[tp]){
+      this.bullet_poll[tp] = []
+    }   
+    var poll = this.bullet_poll[tp] 
+    for (var i = poll.length - 1; i >= 0; i--) {
+      if(poll[i].isDestory){
+        poll[i].reuse(pos, reverse_x);
+        return [poll[i],true]
+      }
+    };
+
+    //not find object  use BulletFactory
+    var bullet = new Bullet(pos, reverse_x);
+    this.bullet_poll[tp].push(bullet);
+    return [bullet,false]
+  },
+})
 
 //整个弹幕的维护
 BulletSystem = cc.Class.extend({})

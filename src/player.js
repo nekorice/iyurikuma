@@ -142,11 +142,18 @@ var Player = cc.Sprite.extend({
     } 
   },
   emitBullet: function(dt){
+    var tp = 'basic';
+    var forword = this.animate_forword == 1
+
     //还要分不同的种类
     if(!this.bullet_time){
-      this.bullet = new Bullet(this.getPosition());
-      this.parent.addChild(this.bullet);  
-      this.bullet.emit();
+      var ret = g_var.bulletpoll.get_bullet(tp, this.getPosition(), forword);
+      console.log(ret)
+      this.bullet = ret[0]
+      if(!ret[1]){
+        this.parent.addChild(this.bullet);
+        this.bullet.emit();
+      }   
       this.bullet_time = 0;       
     }
     //多种 bullet 有不同的 cooldown
@@ -155,9 +162,12 @@ var Player = cc.Sprite.extend({
     this.bullet_time += dt;
     if(this.bullet_time > this.bullet.cooldown){
       this.bullet_time = 0;
-      this.bullet = new Bullet(this.getPosition());
-      this.parent.addChild(this.bullet);  
-      this.bullet.emit();
+      var ret = g_var.bulletpoll.get_bullet(tp, this.getPosition(), forword);
+      this.bullet = ret[0]
+      if(!ret[1]){
+        this.parent.addChild(this.bullet);
+        this.bullet.emit();
+      } 
     }
 
   },

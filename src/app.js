@@ -43,6 +43,9 @@ var Battle = cc.LayerColor.extend({
     this.addChild(back);
     */
     
+    //全局变量
+    g_var['bulletpoll'] = new BulletPool()
+
     //如果addChild undefined 就会报错 already add
     //Map
     this.map = new Map(size);
