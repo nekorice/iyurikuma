@@ -5,12 +5,14 @@
     license: MIT
 */
 
+"use strict";
 
 Bullet = cc.Sprite.extend({
-  fly_tag:301,
-  boom_tag:302,
-  type:'basic',
+  flyTag: 301,
+  boomTag: 302,
+  type: 'basic',
   cooldown: 1.5,
+  aliveTime: 3,
   ctor:function (point, reverse_x) {
     if(this._super){
       this._super();
@@ -34,7 +36,7 @@ Bullet = cc.Sprite.extend({
     };
     var walkfront = new cc.Animation(animFrames, 0.1);
     this.front_animate = cc.RepeatForever.create(new cc.Animate(walkfront));
-    this.front_animate.setTag(this.animate_tag);
+    this.front_animate.setTag(this.flyTag);
     this.runAction(this.front_animate);
     cc.log('bullet start')
 
@@ -57,7 +59,8 @@ Bullet = cc.Sprite.extend({
     //this.width
     //cc.log(this.height)
     //cc.log(this.width)
-    this.setPosition(point.x + this.width/2, point.y + this.height/2)
+    this.setPosition(point.x + this.width/2, point.y + this.height/2);
+    this.life = 0;
 
   },
   emit: function(){
@@ -81,22 +84,33 @@ Bullet = cc.Sprite.extend({
     if(reverse_x){
       this.reverse = -1;
     }
-    this.resue = true;
+    this.visible = true;
   },
   doCollide: function(rect){
     //碰撞统一由场景管理
     return this.collide.check(this.collide_rect(), rect);
   },
-  destroy: function(de){
+  boom:function(){
     //cast boom animate
     //cast boom sound
+    this.destory(false);
+  },
+  destory: function(de){
+    //destory
+    this.unscheduleUpdate();
+    this.visible = false;
+    this.isDestory = true;
   },
   update:function(dt){
     //update pos
     this.x = this.x + this.speed.x;
     this.y = this.y + this.speed.y;
-    //this.frame_animate.update(dt)
 
+    //check is it alive
+    this.life += dt;
+    if(this.life > this.aliveTime){
+      this.destory(false);
+    }
   },
 })
 
@@ -106,6 +120,7 @@ all the bullets are rendered by one spritesheet,
 
 //重复利用的 bullet pool
 BulletPool = cc.Class.extend({
+  max:100,
   ctor:function() {
     if(this._super){
       this._super();
@@ -134,6 +149,10 @@ BulletPool = cc.Class.extend({
     var bullet = new Bullet(pos, reverse_x);
     this.bullet_poll[tp].push(bullet);
     return [bullet,false]
+  },
+  recycle:function(){
+    //when stage change 
+    //do recycle
   },
 })
 
