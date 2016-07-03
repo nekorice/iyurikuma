@@ -215,7 +215,7 @@ StaticMove = ClassicMove.extend({
   },
   move: function(dt, ground, max_left, max_right){
     //call super
-    return this._super(dt, ground);
+    return this._super(dt, ground, max_left, max_right);
   }
 
 })

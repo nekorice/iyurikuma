@@ -14,7 +14,7 @@ var Map = cc.Layer.extend({
   map_index:0,
   chapter_end:false,
   //collide object
-  _lastCheck:{'yuri':0, 'enermy':0, 'trap':0 },
+  _lastCheck:{'yuri':0, 'enemy':0, 'trap':0 },
   entity:{'yuri':[], 'enemy':[], 'trap':[] },
   yuri:[],
   ctor:function (swidth) {
@@ -89,7 +89,7 @@ var Map = cc.Layer.extend({
     //map 也是node 这样滚动map的时候可以直接对应滚动
     //enermy/food 挂载在map上
     //set up enermy
-    this._load_object(map, start_m, 'enemy', Enemy, null);
+    //this._load_object(map, start_m, 'enemy', Enemy, null);
     //set up flower
     this._load_object(map, start_m, 'yuri', Yuri, this.flowerNode);
     this._load_object(map, start_m, 'trap', Trap, this.trapNode);
@@ -103,18 +103,19 @@ var Map = cc.Layer.extend({
     }
     if(this.entity[group_name] === undefined){
       this.entity[group_name] = [];
+      this._lastCheck[group_name] = 0;
     }
 
     var obs = map.getObjectGroup(group_name).getObjects();
-    var pa = this;
-    if(bnode!=null){
-      pa = bnode;
-    }
     //objectNamed
     for (var i = obs.length - 1; i >= 0; i--) {
       var fo = new obj(obs[i], start_m);
       fo.draw_collide(this.snode)
-      pa.addChild(fo);
+      if(bnode!=null){
+        bnode.addChild(fo);
+      }else{
+        this.addChild(fo);
+      }
       this.entity[group_name].push(fo);
     };
   },
@@ -225,7 +226,7 @@ var Map = cc.Layer.extend({
   checkVisual:function() {
     //检查是否可见，在可见范围内的node都加入到app.js里的activeObject
     //进行碰撞判断
-    this._check_visual('enemy');
+    //this._check_visual('enemy');
     this._check_visual('yuri');
     this._check_visual('trap');
   },
@@ -234,6 +235,7 @@ var Map = cc.Layer.extend({
     var everyFrame  = 10;
     var j = 0;
     var entity = this.entity[key]
+    
     //分帧检查数组
     for (var i = this._lastCheck[key]; (i < entity.length && j <= everyFrame); i++) {
       var yu = entity[i]

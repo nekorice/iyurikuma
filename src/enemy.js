@@ -24,9 +24,11 @@ var Enemy = cc.Sprite.extend({
   disable:false,
   ctor:function (tileObject, offset) {
     this._super();
-    this.init(cc.p(tileObject['x'] + offset, tileObject['y']));
+    this.init(cc.p(tileObject['x']+offset, tileObject['y']));
   },
   init:function(p){
+
+    cc.log("init enemy:" + p['x'], p['y'])
     
     this.setAnchorPoint(0, 0);
     this.keyHasPress = {}
@@ -40,6 +42,7 @@ var Enemy = cc.Sprite.extend({
     this.collide = new NomalCollide();
     
     this.setPosition(p);
+    cc.log(this.getPosition())
     //cc.log(this.getPosition());
 
     this.handle = new StaticMove(p, this.speed);
@@ -53,7 +56,9 @@ var Enemy = cc.Sprite.extend({
     //todo  back origin pos
     this.isOriginPos = true;
     //
-    this.patrolLength = 100; 
+    this.patrolLength = 100;  
+    //this.visible = false;
+
     this.test = 0;
   },
   initAnimation:function(){
@@ -163,13 +168,14 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
   },
   calc_visible: function(x) {
     if(this.disable || x > this.x + g_var.ACTIVE_WIDTH || x < this.x - g_var.ACTIVE_WIDTH){
-      return false
+      return true
     }
     return true
   },
   draw_collide:function(dnode){
-    dnode.clear();
-    drawRect(this.collide_rect(), dnode);
+    //动点要自己更新自己的 layer
+    //dnode.clear();
+    //drawRect(this.collide_rect(), dnode);
   },
   collide_ground:function(tiles){
     //get tiles

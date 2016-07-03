@@ -84,14 +84,16 @@ var Battle = cc.LayerColor.extend({
 
     //load enemy 也直接放到 map 里维护
     
-    /*
-    var ep = objectLayer.objectNamed('enermy');
-    var tm = new Enemy(cc.p(ep['x'], ep['y']))
+    
+    var ep = objectLayer.objectNamed('enemy');
+    var tm = new Enemy(ep, 0)
+
     //enermy 在 map 中管理,还是在 app 中管理
     this.enermies.push(tm)
-    this.map.addChild(tm)
-    cc.log("init enemy:" + ep['x'], ep['y'])
-    */
+    this.map.addChild(tm);
+    this.map.addChild(new Enemy({x:832, y:352}, -100));
+    cc.log("app init enemy:" + ep['x'], ep['y'])
+
 
     this.init_lisener();
 
@@ -205,6 +207,7 @@ var Battle = cc.LayerColor.extend({
     cc.director.end();
   },
   activeObject: function(node) {
+    //这个逻辑有点坑啊
     if(!node.visible){
       node.visible = true;
       this._activeNode.push(node);
@@ -244,7 +247,7 @@ var Battle = cc.LayerColor.extend({
       //以后添加可以撞击的 type
       if(anode.type == 'enemy'){
         //player bullet 的判断
-        debugger
+        //debugger
         for (var j = pbullet.length - 1; j >= 0; j--) {
           var be = pbullet[j].doCollide(anode.collide_rect())
           if(be){
@@ -288,12 +291,18 @@ var Battle = cc.LayerColor.extend({
     //use this auto follow player
     //this.map.runAction(cc.follow(this.player));
     
-    //for (var i = this.enermies.length - 1; i >= 0; i--) {
-    //  this.enermies[i].update(dt);
-    //};
+    //不在 update 列表里面就不会显示
+    for (var i = this.enermies.length - 1; i >= 0; i--) {
+      this.enermies[i].update(dt);
+    };
 
     for (var i = this._activeNode.length - 1; i >= 0; i--) {
       //cc.log(_activeNode.type)
+      //移动的物体需要 update
+      if(this._activeNode[i].type == 'enemy'){
+        cc.log(this._activeNode[i].type)
+      }
+      
       this._activeNode[i].update(dt);
     };
 

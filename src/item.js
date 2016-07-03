@@ -61,6 +61,7 @@ var Yuri = Item.extend({
     
     this.setAnchorPoint(0, 0);
     this.scale = 0.2;
+    //默认 visible = false 来添加到界面
     this.visible = false;
      
   },
