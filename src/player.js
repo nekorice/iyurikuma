@@ -47,10 +47,14 @@ var Player = cc.Sprite.extend({
     cc.log(this.getPosition());
 
     this.handle = new ClassicMove(p, this.speed);
-    //this.bullet = PlayerBullet
 
     //存储上一帧的位置 用于计算当前位移，来同步滚动地图
     this.last_position = p;
+
+    //bullet
+    this.bullet = null;
+    this.bullet_time = 0;
+    this.bullet_config = {};
 
     //animation 和状态机绑定
     //state 状态机
@@ -145,29 +149,24 @@ var Player = cc.Sprite.extend({
     var tp = 'basic';
     var forword = this.animate_forword == 1
 
-    //还要分不同的种类
-    if(!this.bullet_time){
-      var ret = g_var.bulletpoll.get_bullet(tp, this.getPosition(), forword);
-      console.log(ret)
-      this.bullet = ret[0]
-      if(!ret[1]){
-        this.parent.addChild(this.bullet);
-        this.bullet.emit();
-      }   
-      this.bullet_time = 0;       
-    }
     //多种 bullet 有不同的 cooldown
     //get bullet cooldown
     //this.cooldown = 
+    //当前的 bullet tp
+    //计算 cooldown 的时间也有问题,现在是每次按键才会计算 所以这里应该不用加 dt
+    //专门的计算cooldown dt 和触发的 emitBullet
+
     this.bullet_time += dt;
-    if(this.bullet_time > this.bullet.cooldown){
+    if(!this.bullet || this.bullet_time > this.bullet.cooldown){
       this.bullet_time = 0;
-      var ret = g_var.bulletpoll.get_bullet(tp, this.getPosition(), forword);
+      var ret = g_var.bulletpoll_p.get_bullet(tp, this.getPosition(), forword);
       this.bullet = ret[0]
+      cc.log(ret[1])
       if(!ret[1]){
         this.parent.addChild(this.bullet);
-        this.bullet.emit();
       } 
+      //emit 有时候调用时机不对
+      this.bullet.emit();      
     }
 
   },
@@ -265,6 +264,10 @@ var Player = cc.Sprite.extend({
     return this.collide.check(this.collide_rect(), rect);
   },
   boom: function(node, ui_layer){
+    //从逻辑层更新 ui_layer的代码使用事件来传播
+    //不使用这种传播 this 的方式
+    //emitter
+
     if(node.type == 'yuri'){
       //分数增加
       this.score += 100;
@@ -281,6 +284,9 @@ var Player = cc.Sprite.extend({
       
       //check die
       node.destroy();
+    }else if(node.type == 'bullet'){
+      this.hp --;
+      //event
     }
   },
   update:function(dt){

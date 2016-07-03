@@ -5,9 +5,9 @@
     license: MIT
 */
 
-"use strict";
+//"use strict";
 
-Bullet = cc.Sprite.extend({
+var Bullet = cc.Sprite.extend({
   flyTag: 301,
   boomTag: 302,
   type: 'basic',
@@ -68,19 +68,17 @@ Bullet = cc.Sprite.extend({
     this.scheduleUpdate();
   },
   isOutOfScreen: function(){
+    //不作判断 超出屏幕依然有效 用 live 时间来控制
     //当加入到 map 的 child 中就不能这么判断了
     //nouseful
     var pos  = this.getPosition();
     var size = cc.director.getWinSize();
     //bullet pos是屏幕的相对坐标
-    if(pos.x < 0 || pos.x > size.x || pos.y < 0 || pos.y > size.y){
-      return true
-    }
-    return false
   },
   reuse: function(point, reverse_x){
     this.setPosition(point.x + this.width/2, point.y + this.height/2)
     this.reverse = 1;
+    this.life = 0
     if(reverse_x){
       this.reverse = -1;
     }
@@ -100,6 +98,8 @@ Bullet = cc.Sprite.extend({
     this.unscheduleUpdate();
     this.visible = false;
     this.isDestory = true;
+    cc.log('the bullet is destory')
+
   },
   update:function(dt){
     //update pos
@@ -119,7 +119,7 @@ all the bullets are rendered by one spritesheet,
 */
 
 //重复利用的 bullet pool
-BulletPool = cc.Class.extend({
+var BulletPool = cc.Class.extend({
   max:100,
   ctor:function() {
     if(this._super){
@@ -137,7 +137,7 @@ BulletPool = cc.Class.extend({
     if(!this.bullet_poll[tp]){
       this.bullet_poll[tp] = []
     }   
-    var poll = this.bullet_poll[tp] 
+    var poll = this.bullet_poll[tp];
     for (var i = poll.length - 1; i >= 0; i--) {
       if(poll[i].isDestory){
         poll[i].reuse(pos, reverse_x);
@@ -150,6 +150,15 @@ BulletPool = cc.Class.extend({
     this.bullet_poll[tp].push(bullet);
     return [bullet,false]
   },
+  get_active_bullet:function(){
+    var ret = [];
+    for(var k in this.bullet_poll){
+      if(this.bullet_poll.hasOwnProperty(k) && !this.bullet_poll[k].isDestory){
+        ret.concat(this.bullet_poll[k]);
+      }
+    }
+    return ret
+  },
   recycle:function(){
     //when stage change 
     //do recycle
@@ -157,7 +166,7 @@ BulletPool = cc.Class.extend({
 })
 
 //整个弹幕的维护
-BulletSystem = cc.Class.extend({})
+var BulletSystem = cc.Class.extend({})
 
 
 

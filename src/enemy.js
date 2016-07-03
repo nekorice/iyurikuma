@@ -20,10 +20,11 @@ var Enemy = cc.Sprite.extend({
   boxHeight:90,
   //动画的朝向
   animate_forword:1,
-  ctor:function (p) {
+  type:'enemy',
+  disable:false,
+  ctor:function (tileObject, offset) {
     this._super();
-    //come from 2.x
-    this.init(p);
+    this.init(cc.p(tileObject['x'] + offset, tileObject['y']));
   },
   init:function(p){
     
@@ -160,6 +161,12 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
     //包围盒
     return new Rect(this.x-this.boxWidth/2, this.y, this.boxWidth, this.boxHeight);
   },
+  calc_visible: function(x) {
+    if(this.disable || x > this.x + g_var.ACTIVE_WIDTH || x < this.x - g_var.ACTIVE_WIDTH){
+      return false
+    }
+    return true
+  },
   draw_collide:function(dnode){
     dnode.clear();
     drawRect(this.collide_rect(), dnode);
@@ -180,26 +187,9 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
   doCollide: function(rect){
     return this.collide.check(this.collide_rect(), rect);
   },
-  boom: function(node, ui_layer){
-    //在碰撞检测里面做 只碰撞 playerObject List(player, 子弹,和友军) 
-    /*
-    if(node.type == 'yuri'){
-      //分数增加
-      this.score += 100;
-      //update ui
-      ui_layer.lbscore.setString(this.score);
-      //node消灭
-      node.destroy();
-    }else if(node.type == 'trap'){
-      
-      this.hp --;
-      //update_ui
-      ui_layer.showHp(this.hp);
-      //短暂无敌 快速闪烁动画+timeout，去掉无敌符号
-      
-      //check die
-      node.destroy();
-    }*/
+  boom: function(node){
+    //碰撞处理  事件发送 
+
   },
   update:function(dt){
     //切换状态的cd时间 在状态机中定义

@@ -4,7 +4,7 @@
 //多了一个gif有问题
 
 var scene_map = {
-
+  //scene  chapter
   '0':['res/yuri.tmx','res/yuri.tmx'],
 }
 
@@ -65,7 +65,7 @@ var g_var = {
   //重力
   'gravity': 20,
   'PIXMIN': 10,
-  'DEBUG': false,
+  'DEBUG': true,
   'MAP_ROLLING_SPACE': 300,
   'MAP_SKY_SPACE': 200,
   'scene_map': scene_map,

@@ -44,7 +44,9 @@ var Battle = cc.LayerColor.extend({
     */
     
     //全局变量
-    g_var['bulletpoll'] = new BulletPool()
+    g_var['bulletpoll'] = new BulletPool();
+    g_var['bulletpoll_p'] = new BulletPool();
+
 
     //如果addChild undefined 就会报错 already add
     //Map
@@ -80,15 +82,17 @@ var Battle = cc.LayerColor.extend({
     this.map.addChild(this.player);
     this.map.player = this.player;
 
-    //load enemy 
+    //load enemy 也直接放到 map 里维护
     
+    /*
     var ep = objectLayer.objectNamed('enermy');
     var tm = new Enemy(cc.p(ep['x'], ep['y']))
     //enermy 在 map 中管理,还是在 app 中管理
     this.enermies.push(tm)
     this.map.addChild(tm)
     cc.log("init enemy:" + ep['x'], ep['y'])
-    
+    */
+
     this.init_lisener();
 
     //scene 
@@ -216,30 +220,81 @@ var Battle = cc.LayerColor.extend({
   collide: function() {
     //cc.log(this._activeNode)
     //每一帧只判断一定数量
-    for (var i = this._activeNode.length - 1; i >= 0; i--) {  
+
+    //bullet 由 bulletpoll 控制
+    //enemry 和 item 由地图控制activeNode
+
+    //子弹 需要每帧都测试
+    //大约100-200上下
+    var ebullet = g_var.bulletpoll.get_active_bullet()
+    //player 子弹不超过20
+    var pbullet = g_var.bulletpoll_p.get_active_bullet()
+
+    for (var i = this._activeNode.length - 1; i >= 0; i--) { 
+      //_activeNode 只包括 物品和 enermy
+      var anode = this._activeNode[i] 
       //do collide with player
-      var re = this.player.doCollide(this._activeNode[i].collide_rect()); 
+      var re = this.player.doCollide(anode.collide_rect()); 
       if(re){
         //碰撞了
         this.player.boom(this._activeNode[i], this);
         this.unactiveObject(this._activeNode[i], true);
-      }  
+      }
+
+      //以后添加可以撞击的 type
+      if(anode.type == 'enemy'){
+        //player bullet 的判断
+        debugger
+        for (var j = pbullet.length - 1; j >= 0; j--) {
+          var be = pbullet[j].doCollide(anode.collide_rect())
+          if(be){
+            //bullet 击中了物品
+            cc.log('player bullet hit enemy')
+            anode.boom(pbullet[j]);
+            pbullet[j].boom();
+            //事件传递   hitEvent
+          }        
+        };
+      }
+    };
+
+    //enemy bullet判断
+    var pr = this.player.collide_rect()
+    for (var e = ebullet.length - 1; e >= 0; e--) {
+      var ebb = ebullet[e];
+      if(ebb.doCollide(pr)){
+        cc.log('enemy bullet hit player')
+        this.player.boom(ebb, this);
+        ebb.boom();
+      }
     };
 
     //player 碰撞 activeObejct [ item, bullet, enermy ]
-    //enermy 碰撞 playerBullet
+    //playerBullet  碰撞 [enermy, item]
+    //item enermy 自己不处理碰撞
+    //地形 item 需要特殊处理 和 collid_ground
+  },
+  _collide_bullet:function(bullets){
+
   },
   update:function(dt){
     //sprite.update
     //设定每一帧
     if(this.state != 'battle'){
+      //story 直接用状态表示 battle 中的立绘剧情
       return 
     }
     var ppos = this.player.update(dt);
     //use this auto follow player
     //this.map.runAction(cc.follow(this.player));
-    for (var i = this.enermies.length - 1; i >= 0; i--) {
-      this.enermies[i].update(dt);
+    
+    //for (var i = this.enermies.length - 1; i >= 0; i--) {
+    //  this.enermies[i].update(dt);
+    //};
+
+    for (var i = this._activeNode.length - 1; i >= 0; i--) {
+      //cc.log(_activeNode.type)
+      this._activeNode[i].update(dt);
     };
 
     //map update dt
