@@ -257,7 +257,7 @@ var Battle = cc.LayerColor.extend({
           var be = pbullet[j].doCollide(anode.collide_rect())
           if(be){
             //bullet 击中了物品
-            cc.log('player bullet hit enemy')
+            console.log('player bullet hit enemy')
             anode.boom(pbullet[j]);
             pbullet[j].boom();
             //事件传递   hitEvent
@@ -303,11 +303,7 @@ var Battle = cc.LayerColor.extend({
 
     for (var i = this._activeNode.length - 1; i >= 0; i--) {
       //cc.log(_activeNode.type)
-      //移动的物体需要 update
-      if(this._activeNode[i].type == 'enemy'){
-        cc.log(this._activeNode[i].type)
-      }
-      
+      //移动的物体需要 update      
       this._activeNode[i].update(dt);
     };
 

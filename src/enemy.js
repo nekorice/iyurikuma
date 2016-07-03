@@ -99,7 +99,7 @@ var Enemy = cc.Sprite.extend({
     this.animate.visible = true;
     this.animate_action = action;
     this.animate.getAnimation().play(action);
-    cc.log(this.animate);    
+    //cc.log(this.animate);    
   },
   //idle patrol hunting attack back
   //attack_time
@@ -214,7 +214,7 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
     //dt 地板高度  最左坐标 最右坐标
     var pos = this.handle.move(dt, ground_hight);
     //var pos = this.getPosition()
-    cc.log(pos);
+    //cc.log(pos);
     //check is back to oripos
     this.isOriginPos = pos.x - this.originPos.x < g_var.PIXMIN
     this.setPosition(pos);

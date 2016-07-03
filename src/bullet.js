@@ -42,7 +42,8 @@ var Bullet = cc.Sprite.extend({
 
     //path move
     this.vector = { x:1, y:1 }
-    this.speed = { x:35 * this.vector.x, y:0 * this.vector.y }
+    //35 is ok
+    this.speed = { x:3 * this.vector.x, y:0 * this.vector.y }
     this.reverse = 1;
     if(reverse_x){
       this.reverse = -1;
