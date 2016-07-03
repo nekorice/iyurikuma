@@ -20,6 +20,8 @@
         "src/actions.js",
         "src/move.js",
         "src/fsm.js",
+
+        "src/animateManager.js",
         
         "src/map.js",
         

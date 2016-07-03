@@ -213,9 +213,10 @@ StaticMove = ClassicMove.extend({
       this.stopmove();
     }
   },
-  move: function(dt, ground, max_left, max_right){
+  move: function(dt, ground){
     //call super
-    return this._super(dt, ground, max_left, max_right);
+    //不限制最左和最右
+    return this._super(dt, ground, undefined, undefined);
   }
 
 })

@@ -47,6 +47,8 @@ var Battle = cc.LayerColor.extend({
     g_var['bulletpoll'] = new BulletPool();
     g_var['bulletpoll_p'] = new BulletPool();
 
+    g_var['ani_mana'] = new AnimateManager();
+
 
     //如果addChild undefined 就会报错 already add
     //Map
@@ -84,16 +86,18 @@ var Battle = cc.LayerColor.extend({
 
     //load enemy 也直接放到 map 里维护
     
-    
+    /*
     var ep = objectLayer.objectNamed('enemy');
     var tm = new Enemy(ep, 0)
 
     //enermy 在 map 中管理,还是在 app 中管理
     this.enermies.push(tm)
     this.map.addChild(tm);
-    this.map.addChild(new Enemy({x:832, y:352}, -100));
-    cc.log("app init enemy:" + ep['x'], ep['y'])
-
+    var tt = new Enemy({x:832, y:352}, -100)
+    this.map.addChild(tt);
+    //cc.log("app init enemy:" + ep['x'], ep['y'])
+    this.enermies.push(tt);
+    */
 
     this.init_lisener();
 
@@ -207,7 +211,8 @@ var Battle = cc.LayerColor.extend({
     cc.director.end();
   },
   activeObject: function(node) {
-    //这个逻辑有点坑啊
+    //初始必须设定所有 object 为 visible 为 false, 减少遍历
+    //这个逻辑有点坑
     if(!node.visible){
       node.visible = true;
       this._activeNode.push(node);

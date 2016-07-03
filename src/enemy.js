@@ -6,9 +6,10 @@
 */
 
 var Enemy = cc.Sprite.extend({
+  //class variable
+  //cocos 这里是浅复制
+  //任何对象数组会导致在不同的 class 中共享内容
   hp:3,
-  //动画列表
-  act:{},
   //当前动画 class Armature
   animate:null,
   animate_action:null,
@@ -31,7 +32,10 @@ var Enemy = cc.Sprite.extend({
     cc.log("init enemy:" + p['x'], p['y'])
     
     this.setAnchorPoint(0, 0);
-    this.keyHasPress = {}
+    this.keyHasPress = {};
+    //动画列表
+    this.act = {};
+
     //init 动画
     this.initAnimation();
 
@@ -57,7 +61,7 @@ var Enemy = cc.Sprite.extend({
     this.isOriginPos = true;
     //
     this.patrolLength = 100;  
-    //this.visible = false;
+    this.visible = false;
 
     this.test = 0;
   },
@@ -65,14 +69,10 @@ var Enemy = cc.Sprite.extend({
     //初始化骨骼动画
     //manager 管理 预加载
     //动画需要统一管理
-    armatureDataManager = ccs.armatureDataManager;
-    //是否可以复用
-    armatureDataManager.addArmatureFileInfo(res.kumarun);
-
 
     //这里是单独的初始化
     //return ccs.ArmatureAnimation
-    var armature = ccs.Armature.create("kumarun");
+    var armature = new ccs.Armature("kumarun");
     //see action
     armature.scale = ANIMATION_SCALE;
     armature.setLocalZOrder(999);
@@ -98,7 +98,8 @@ var Enemy = cc.Sprite.extend({
     this.animate = act;
     this.animate.visible = true;
     this.animate_action = action;
-    this.animate.getAnimation().play(action);    
+    this.animate.getAnimation().play(action);
+    cc.log(this.animate);    
   },
   //idle patrol hunting attack back
   //attack_time
@@ -168,7 +169,7 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
   },
   calc_visible: function(x) {
     if(this.disable || x > this.x + g_var.ACTIVE_WIDTH || x < this.x - g_var.ACTIVE_WIDTH){
-      return true
+      return false
     }
     return true
   },
@@ -199,8 +200,10 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
   },
   update:function(dt){
     //切换状态的cd时间 在状态机中定义
-    this.fsm.calcAI();
-    this.fsm.do_state(dt);
+    
+    //this.fsm.calcAI();
+    //this.fsm.do_state(dt);
+    this.idle();
 
     //不能使用current map  此函数应该放到map里面  为了实现回到旧的地图  
     var ground_hight = this.collide_ground(this.parent.current_map);
@@ -208,10 +211,10 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
     //null或者 undefined 表示不限制
     var left = -this.parent.x + this.boxWidth;
     var right = -this.parent.x + this.parent.swidth;
-    //防止超过两端
     //dt 地板高度  最左坐标 最右坐标
-    var pos = this.handle.move(dt, ground_hight, left, right);
-    //cc.log(pos);
+    var pos = this.handle.move(dt, ground_hight);
+    //var pos = this.getPosition()
+    cc.log(pos);
     //check is back to oripos
     this.isOriginPos = pos.x - this.originPos.x < g_var.PIXMIN
     this.setPosition(pos);

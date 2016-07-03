@@ -10,8 +10,6 @@ var Player = cc.Sprite.extend({
   //ui
   score:0,
   hp:3,
-  //动画列表
-  act:{},
   //当前动画 class Armature
   animate:null,
   animate_action:null,
@@ -30,6 +28,8 @@ var Player = cc.Sprite.extend({
     
     this.setAnchorPoint(0, 0);
     this.keyHasPress = {}
+    //动画列表
+    this.act = {}
     //init 动画
     this.initAnimation();
 
@@ -68,13 +68,15 @@ var Player = cc.Sprite.extend({
   initAnimation:function(){
     //初始化骨骼动画
     //manager 管理 预加载
-    armatureDataManager= ccs.armatureDataManager;
+    
+    //armatureDataManager= ccs.armatureDataManager;
     //load json
     //add plist and png in resource.js
-    armatureDataManager.addArmatureFileInfo(res.kumarun);
-    armatureDataManager.addArmatureFileInfo(res.kumaswing);
+    //armatureDataManager.addArmatureFileInfo(res.kumarun);
+    //armatureDataManager.addArmatureFileInfo(res.kumaswing);
     //see name in json
     //return ccs.ArmatureAnimation
+    
     var armature = ccs.Armature.create("kumarun");
     var kumaswing = ccs.Armature.create("kumasw");
     //see action

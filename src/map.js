@@ -16,7 +16,6 @@ var Map = cc.Layer.extend({
   //collide object
   _lastCheck:{'yuri':0, 'enemy':0, 'trap':0 },
   entity:{'yuri':[], 'enemy':[], 'trap':[] },
-  yuri:[],
   ctor:function (swidth) {
     this._super();
     this.init(swidth);
@@ -89,7 +88,7 @@ var Map = cc.Layer.extend({
     //map 也是node 这样滚动map的时候可以直接对应滚动
     //enermy/food 挂载在map上
     //set up enermy
-    //this._load_object(map, start_m, 'enemy', Enemy, null);
+    this._load_object(map, start_m, 'enemy', Enemy, null);
     //set up flower
     this._load_object(map, start_m, 'yuri', Yuri, this.flowerNode);
     this._load_object(map, start_m, 'trap', Trap, this.trapNode);
@@ -226,7 +225,7 @@ var Map = cc.Layer.extend({
   checkVisual:function() {
     //检查是否可见，在可见范围内的node都加入到app.js里的activeObject
     //进行碰撞判断
-    //this._check_visual('enemy');
+    this._check_visual('enemy');
     this._check_visual('yuri');
     this._check_visual('trap');
   },
