@@ -264,7 +264,12 @@ var Map = cc.Layer.extend({
     this.checkVisual();
 
     if(g_var.DEBUG){
+      this.dnode.clear();
       this.player.draw_collide(this.dnode);
+      for (var i = this.entity['enemy'].length - 1; i >= 0; i--) {
+        this.entity['enemy'][i].draw_collide(this.dnode);
+      };
+
     }
 
   }

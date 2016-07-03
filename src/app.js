@@ -237,7 +237,6 @@ var Battle = cc.LayerColor.extend({
     var ebullet = g_var.bulletpoll.get_active_bullet()
     //player 子弹不超过20
     var pbullet = g_var.bulletpoll_p.get_active_bullet()
-
     for (var i = this._activeNode.length - 1; i >= 0; i--) { 
       //_activeNode 只包括 物品和 enermy
       var anode = this._activeNode[i] 

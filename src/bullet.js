@@ -53,8 +53,10 @@ var Bullet = cc.Sprite.extend({
     //子弹只检测是否与地形碰撞和ENERY_MY碰撞
     //碰撞列表为：1，player和友军 2.自己和友军子弹 3.敌军子弹 4 地形（子弹是否需要和地形交互） 5 敌人
     //player的碰撞由player处理
+    this.boxWidth = 100;
+    this.boxHeight = 100;
     this.collide = new NomalCollide();
-    this.isDestory = true;
+    this.isDestory = false;
 
     //get this.height
     //this.width
@@ -84,9 +86,15 @@ var Bullet = cc.Sprite.extend({
       this.reverse = -1;
     }
     this.visible = true;
+    this.isDestory = false;
   },
+  collide_rect:function(){
+    //包围盒
+    return new Rect(this.x-this.boxWidth/2, this.y, this.boxWidth, this.boxHeight);
+  },  
   doCollide: function(rect){
     //碰撞统一由场景管理
+    //debugger;
     return this.collide.check(this.collide_rect(), rect);
   },
   boom:function(){
@@ -154,8 +162,15 @@ var BulletPool = cc.Class.extend({
   get_active_bullet:function(){
     var ret = [];
     for(var k in this.bullet_poll){
-      if(this.bullet_poll.hasOwnProperty(k) && !this.bullet_poll[k].isDestory){
-        ret.concat(this.bullet_poll[k]);
+      //debugger;
+      if(this.bullet_poll.hasOwnProperty(k)){
+        var bullets = this.bullet_poll[k]
+        for (var i = bullets.length - 1; i >= 0; i--) {
+          if(!bullets[i].isDestory){
+            ret.push(bullets[i]);
+          }
+        };
+        //ret = ret.concat(this.bullet_poll[k]);
       }
     }
     return ret

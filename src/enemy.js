@@ -176,7 +176,7 @@ pos.y > this.y - 100 && pos.y < this.y + 100 ){
   draw_collide:function(dnode){
     //动点要自己更新自己的 layer
     //dnode.clear();
-    //drawRect(this.collide_rect(), dnode);
+    drawRect(this.collide_rect(), dnode);
   },
   collide_ground:function(tiles){
     //get tiles

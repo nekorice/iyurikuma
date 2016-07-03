@@ -247,7 +247,7 @@ var Player = cc.Sprite.extend({
     return new Rect(this.x-this.boxWidth/2, this.y, this.boxWidth, this.boxHeight);
   },
   draw_collide:function(dnode){
-    dnode.clear();
+    //dnode.clear();
     drawRect(this.collide_rect(), dnode);
   },
   collide_ground:function(tiles){
