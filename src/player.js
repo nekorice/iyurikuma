@@ -52,7 +52,7 @@ var Player = cc.Sprite.extend({
     this.last_position = p;
 
     //bullet
-    this.bullet = null;
+    this.bullet = {};
     this.bullet_time = 0;
     this.bullet_config = {};
 
@@ -143,13 +143,13 @@ var Player = cc.Sprite.extend({
     this.change_animation(this.act.run, 'stop');
   },
   handle_cooldown: function(dt){
-    if(this.bullet_time){
-      this.bullet_time += dt;
-    } 
+    this.bullet_time += dt;
   },
-  emitBullet: function(dt){
+  emitBullet: function(tp){
     var tp = 'basic';
     var forword = this.animate_forword == 1
+
+    //debugger;
 
     //多种 bullet 有不同的 cooldown
     //get bullet cooldown
@@ -158,17 +158,16 @@ var Player = cc.Sprite.extend({
     //计算 cooldown 的时间也有问题,现在是每次按键才会计算 所以这里应该不用加 dt
     //专门的计算cooldown dt 和触发的 emitBullet
 
-    this.bullet_time += dt;
-    if(!this.bullet || this.bullet_time > this.bullet.cooldown){
+    if(!this.bullet[tp] || this.bullet_time > this.bullet[tp].cooldown){
       this.bullet_time = 0;
       var ret = g_var.bulletpoll_p.get_bullet(tp, this.getPosition(), forword);
-      this.bullet = ret[0]
+      this.bullet[tp] = ret[0]
       cc.log(ret[1])
       if(!ret[1]){
-        this.parent.addChild(this.bullet);
+        this.parent.addChild(this.bullet[tp]);
       } 
       //emit 有时候调用时机不对
-      this.bullet.emit();      
+      this.bullet[tp].emit();      
     }
 
   },
@@ -184,7 +183,7 @@ var Player = cc.Sprite.extend({
     }
     
     if(cc.KEY.c in this.keyHasPress){
-      this.emitBullet(dt);
+      this.emitBullet();
     }
 
   },
