@@ -249,7 +249,9 @@ var Player = cc.Sprite.extend({
     //dnode.clear();
     drawRect(this.collide_rect(), dnode);
   },
-  collide_ground:function(tiles){
+  collide_tiles:function(tiles){
+    //tiles --> tile map
+    //从 tile map 里面找到当前 position 的 tiels 碰撞坐标
     //get tiles
     //-->map对象-->battlelayer
     //this.parent = map
@@ -259,7 +261,51 @@ var Player = cc.Sprite.extend({
     var ground = TilesHelper.getGround(tiles, tpos);
 
     //jump可以往上，但是不能往下
-    return ground
+
+
+    //掉入深坑的左右碰撞未制作 获得当前 tiles 向左最近和向右最近的 wall
+    var wall = TilesHelper.getWall(tiles, tpos);
+    //debugger;
+    return [ground, wall]
+  },
+  collide_item:function(){
+    //地形
+    //y 轴的 collid
+    //x 轴的 collied  left right
+    //获得ActiveObject  tp 为 可以 collide 的物品
+    //计算 y轴的rect
+    //计算当前 x 轴的碰撞
+    var an = this.parent.getActiceObject();
+    var left = 0;
+    var right = 9999;
+    var bottom = 0;
+
+    for (var i = an.length - 1; i >= 0; i--) {
+      //cc.log(_activeNode.type)
+      //移动的物体需要 update
+      var node = an[i]      
+      
+      if(node.type.indexOf('door') != -1 && (this.y - node.y <= -node.height )){
+        if(node.x >= this.x - g_var.PIXMIN  && node.x < right){
+          right = node.x;
+        }
+        if(node.x <= this.x + g_var.PIXMIN && node.x > left){
+          left = node.x;
+        }
+
+      }
+
+      if(node.type.indexOf('bridge') != -1 && (this.x - node.x - this.boxWidth/2 <= node.width)){
+        if(node.y <= this.y + g_var.PIXMIN && node.y > bottom){
+          bottom = node.y;
+        }
+      }
+
+    };    
+
+
+
+    return {left:left, right:right, bottom:bottom}
   },
   doCollide: function(rect){
     return this.collide.check(this.collide_rect(), rect);
@@ -301,17 +347,28 @@ var Player = cc.Sprite.extend({
     //切换状态的cd时间 在状态机中定义
     this.fsm.do_state(dt);
 
+    var item_collide = this.collide_item();
     //this.parent == maplayer
     //get 地面高度
     //不能使用current map  此函数应该放到map里面  为了实现回到旧的地图  
-    var ground_hight = this.collide_ground(this.parent.current_map);
-    
+    var tiles_collide = this.collide_tiles(this.parent.current_map);
+    var ground_hight = tiles_collide[0]
+    //collide_y
+    ground_hight = Math.max(ground_hight, item_collide.bottom);
+  
+    //防止超过两端  屏幕绝对坐标 变化的是 this.parent.x 的坐标
+    //原本地形的 collid 没有计算
+    //var wall = this.collide_wall(this.parent.current_map);
     var left = -this.parent.x + this.boxWidth;
     var right = -this.parent.x + this.parent.swidth;
-    //防止超过两端
+
+    //计算前方 x 坐标范围内的物品的 x 碰撞
+    //collide_x 
+    left = Math.max(item_collide.left, left, tiles_collide[1].left);
+    right = Math.min(item_collide.right, right, tiles_collide[1].right);
+
     //dt 地板高度  最左坐标 最右坐标
     var pos = this.handle.move(dt, ground_hight, left, right);
-    //cc.log(pos);
     this.setPosition(pos);
     //update position
     this.last_position = pos; 

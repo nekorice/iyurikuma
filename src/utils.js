@@ -88,7 +88,61 @@ var TilesHelper = (function(){
       //cc.log(pos.y)
       //cc.log(ground)
       return (tilemap.mapHeight - ground) * tilemap.tileHeight;
-    }
+    },
+    'getWall':function(tilemap, pos){
+      /*
+        tilemap:cc.TMXTiledMap
+        pos: tilemap的tile坐标
+        mark: 垂直向的 collide 和横向的 collide 要使用不同的图层属性
+              这样对于跳跃穿越  横向层 不用判断 是否用跳跃横穿了 wall
+      */
+      //get 当前高度 最近的一个往下最近的一个地面 加上一点计算误差
+      //tilemap的坐标是左上角是0,0
+      var left = 0,right = 99999;
+      var collidableLayer = tilemap.getLayer("collide");
+      /*
+      var test = []
+      for (var i = 0; i <tilemap.mapWidth; i++) {
+        for (var j=0; j<tilemap.mapHeight; j++){
+          var gid = collidableLayer.getTileGIDAt(i, j);
+          var proper = tilemap.getPropertiesForGID(gid);
+          if(proper != undefined && proper["collide"] == 1) {
+            test.push([i,j])
+          } 
+        }
+      };*/
+      
+      //前面获得的 tiles 貌似会多一
+      pos.y = pos.y -1;
+      if(pos.y >= tilemap.mapHeight){
+        //cc.log(pos.x)
+        pos.y = tilemap.mapHeight -1;
+      }
+
+      if(pos.y < 0){
+        cc.log('oop pos < 0')
+        pos.y = 0;
+      }
+
+      //cc.log(pos.x, pos.y)
+      for (var i = pos.x; i < tilemap.mapWidth; i++) {
+        var gid = collidableLayer.getTileGIDAt(i, pos.y);
+        var proper = tilemap.getPropertiesForGID(gid);
+        if(proper != undefined && proper["collide"] == 1) {
+          right = i * tilemap.tileWidth;
+          break;
+        } 
+      };
+      for(var j = pos.x - 1; j >= 0; j--){
+        var gid = collidableLayer.getTileGIDAt(j, pos.y);
+        var proper = tilemap.getPropertiesForGID(gid);
+        if(proper != undefined && proper["collide"] == 1) {
+          left = i * tilemap.tileWidth;
+          break;
+        }               
+      }     
+      return {left:left, right:right}
+    },
   }
 })();
   

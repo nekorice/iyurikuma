@@ -59,6 +59,7 @@ var Yuri = Item.extend({
     this.bwidth = tileObject['width'];
     this.bheight = tileObject['height'];
     
+    //锚点设置为左上角
     this.setAnchorPoint(0, 0);
     this.scale = 0.2;
     //默认 visible = false 来添加到界面
@@ -94,3 +95,29 @@ var Trap = Item.extend({
 
   }  
 }) 
+
+var Bridge = Item.extend({
+  type:'bridge',
+  ctor:function (tileObject, offset) {
+      //init img
+      this._super(res.trap);
+      //come from 2.x
+      this.init(tileObject, offset);
+    },
+    init:function(tileObject, offset){
+      cc.log('init bridge');
+      this.x = tileObject['x'] + offset;
+      this.y = tileObject['y'];
+      this.bwidth = tileObject['width'];
+      this.bheight = tileObject['height'];
+
+      this.setAnchorPoint(0, 0.1);
+      this.scale = 0.3;
+      this.visible = false;
+
+    },
+    update: function(dt) {
+
+  },    
+})
+
