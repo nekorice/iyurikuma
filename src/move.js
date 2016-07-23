@@ -223,5 +223,10 @@ StaticMove = ClassicMove.extend({
 
 PathMove = StaticMove.extend({
   //物体 按照一条路径移动
+  //给定一个函数队列
+  //输入当前x,y, 符合条件 a,  输出当前的速度方向vector
+  //不断的执行
+
+
 });
 

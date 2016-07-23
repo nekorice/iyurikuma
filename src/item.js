@@ -39,7 +39,10 @@ var Item = cc.Sprite.extend({
       cc.log(this);
       cc.log('parent is null');
     }  
-  }
+  },
+  update: function(dt) {
+  
+  },
 });
 
 
@@ -66,9 +69,6 @@ var Yuri = Item.extend({
     this.visible = false;
      
   },
-  update: function(dt) {
-  
-  }
 });
 
 var Trap = Item.extend({
@@ -90,17 +90,14 @@ var Trap = Item.extend({
     this.scale = 0.3;
     this.visible = false;
 
-  },
-  update: function(dt) {
-
-  }  
+  },  
 }) 
 
 var Bridge = Item.extend({
   type:'bridge',
   ctor:function (tileObject, offset) {
       //init img
-      this._super(res.trap);
+      this._super(res.bridge);
       //come from 2.x
       this.init(tileObject, offset);
     },
@@ -108,6 +105,8 @@ var Bridge = Item.extend({
       cc.log('init bridge');
       this.x = tileObject['x'] + offset;
       this.y = tileObject['y'];
+      
+      tileObject
       this.bwidth = tileObject['width'];
       this.bheight = tileObject['height'];
 
@@ -121,3 +120,36 @@ var Bridge = Item.extend({
   },    
 })
 
+var Door = Item.extend({
+  type:'door',
+  ctor:function (tileObject, offset) {
+      //init img
+      this._super(res.door);
+      //come from 2.x
+      this.init(tileObject, offset);
+  },
+  init:function(tileObject, offset){
+    cc.log('init bridge');
+    this.x = tileObject['x'] + offset;
+    this.y = tileObject['y'];
+    this.bwidth = tileObject['width'];
+    this.bheight = tileObject['height'];
+
+    this.setAnchorPoint(0, 0.1);
+    //this.scale = 0.3;
+    this.visible = false;
+    this.isopen = false;
+
+    //直接配置在地图上
+    this.key = tileObject['key'];
+    //add event listen
+    //g_var.Emitter.addListener()
+
+  },
+  update: function(dt) {
+    //this.move 
+    //按照设定的路线
+
+
+  },    
+})
