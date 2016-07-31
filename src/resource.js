@@ -30,6 +30,8 @@ var res = {
     //texture
     flower:'res/ui/yuri.png',
     trap:'res/ui/trap.png',
+    door:'res/ui/door.png',
+    key:'res/ui/key.png',
 
     //tilemap
     y_map:'res/yuri.tmx',

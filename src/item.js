@@ -89,7 +89,7 @@ var Trap = Item.extend({
   },
   init:function(tileObject, offset){
     this.init_base(tileObject, offset); 
-    this.scale = 0.3;
+    this.scale = 0.4;
   },  
 }) 
 
@@ -156,13 +156,17 @@ var Key = Item.extend({
   type:'key',
   ctor:function (tileObject, offset) {
     //init img
-    this._super(res.flower);
+    this._super(res.key);
     this.init(tileObject, offset);
   },
   init:function(tileObject, offset){
 
     this.init_base(tileObject, offset);
     this.key = tileObject['key'];
+    this.scale = 0.3;
 
+  },
+  use:function(){
+    
   },
 });

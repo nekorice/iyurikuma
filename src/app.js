@@ -247,8 +247,12 @@ var Battle = cc.LayerColor.extend({
       var re = this.player.doCollide(anode.collide_rect()); 
       if(re){
         //碰撞了
-        this.player.boom(this._activeNode[i], this);
-        this.unactiveObject(this._activeNode[i], true);
+        var unactive = this.player.boom(this._activeNode[i], this);
+
+        //只有当需要 unactive 才进行 unactive
+        if(unactive){
+          this.unactiveObject(this._activeNode[i], true);
+        } 
       }
 
       //以后添加可以撞击的 type

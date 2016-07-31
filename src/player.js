@@ -288,12 +288,12 @@ var Player = cc.Sprite.extend({
       //移动的物体需要 update
       var node = an[i]      
       
-      if(node.type.indexOf('door') != -1 && (this.y - node.y <= -node.height ) && node.nouse){
-        if(node.x >= this.x - g_var.PIXMIN  && node.x < right){
+      if(node.type.indexOf('door') != -1 && (this.y - node.y <= node.height ) && !node.nouse){
+        if(node.x >= (this.x - g_var.PIXMIN)  && node.x < right){
           right = node.x;
         }
-        if(node.x <= this.x + g_var.PIXMIN && node.x > left){
-          left = node.x;
+        if(node.x <= (this.x + g_var.PIXMIN) && node.x > left){
+          left = node.x + node.bwidth;
         }
 
       }
@@ -325,6 +325,7 @@ var Player = cc.Sprite.extend({
       ui_layer.lbscore.setString(this.score);
       //node消灭
       node.destroy();
+      return true
     }else if(node.type == 'trap'){
       
       this.hp --;
@@ -334,10 +335,19 @@ var Player = cc.Sprite.extend({
       
       //check die
       node.destroy();
+      return true;
+
     }else if(node.type == 'bullet'){
       this.hp --;
       //event
+      return true;
+    }else if(node.type == 'key'){
+
+      node.use();
+      node.destroy();
+      return true;
     }
+    return false;
   },
   update:function(dt){
 
@@ -367,9 +377,10 @@ var Player = cc.Sprite.extend({
 
     //计算前方 x 坐标范围内的物品的 x 碰撞
     //collide_x 
-    var left = Math.max(item_collide.left, left_w, tiles_collide[1].left + this.boxWidth/2);
-    var right = Math.min(item_collide.right, right_w, tiles_collide[1].right - this.boxWidth/2);
+    var left = Math.max(item_collide.left + this.boxWidth/2, left_w, tiles_collide[1].left + this.boxWidth/2);
+    var right = Math.min(item_collide.right - this.boxWidth/2, right_w, tiles_collide[1].right - this.boxWidth/2);
     //console.log(item_collide.left, left_w, tiles_collide[1].left);
+    console.log(right)
     //dt 地板高度  最左坐标 最右坐标
     //set player now pos to move
     this.handle.pos = this.getPosition();

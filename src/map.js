@@ -13,9 +13,10 @@ var Map = cc.Layer.extend({
   map_list:[],
   map_index:0,
   chapter_end:false,
-  //collide object
-  _lastCheck:{'yuri':0, 'enemy':0, 'trap':0 },
-  entity:{'yuri':[], 'enemy':[], 'trap':[] },
+  //collide object  auto add
+  loading_object_names:[],
+  _lastCheck:{'yuri':0, 'enemy':0, 'trap':0, 'door':0, 'key':0 },
+  entity:{'yuri':[], 'enemy':[], 'trap':[], 'door':[], 'key':[] },
   ctor:function (swidth) {
     this._super();
     this.init(swidth);
@@ -48,9 +49,11 @@ var Map = cc.Layer.extend({
     //var texture = cc.textureCache.addImage(res.flower);
     this.flowerNode = new cc.SpriteBatchNode(res.flower, 30);
     this.trapNode = new cc.SpriteBatchNode(res.trap, 30);
+    this.doorNode = new cc.SpriteBatchNode(res.door, 10);
     //以后合并成一个textrue 使用一个batchnode
     this.addChild(this.flowerNode);
     this.addChild(this.trapNode);
+    this.addChild(this.doorNode);
 
     var loading_maps = g_var.scene_map[this.chapter].slice(this.section);
     var start_m = 0
@@ -93,8 +96,13 @@ var Map = cc.Layer.extend({
     //set up enermy
     //this._load_object(map, start_m, 'enemy', Enemy, null);
     //set up flower
+    //重新添加一个加载函数
+    //head 有两个变量, 这里有一个 load 还有一个 checkvisual
+    //管理一下 bnode
     this._load_object(map, start_m, 'yuri', Yuri, this.flowerNode);
     this._load_object(map, start_m, 'trap', Trap, this.trapNode);
+    this._load_object(map, start_m, 'door', Door, this.doorNode);
+    this._load_object(map, start_m, 'key', Key, null);
     //set up trap
 
   },
@@ -235,6 +243,8 @@ var Map = cc.Layer.extend({
     this._check_visual('enemy');
     this._check_visual('yuri');
     this._check_visual('trap');
+    this._check_visual('door');
+    this._check_visual('key');
   },
   _check_visual:function(key) {
     //every frame check 10
