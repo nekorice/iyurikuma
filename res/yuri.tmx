@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" nextobjectid="13">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="25" tilewidth="32" tileheight="32" nextobjectid="19">
  <tileset firstgid="1" name="ymap" tilewidth="32" tileheight="32" spacing="2" tilecount="4">
   <image source="ymap.png" width="134" height="32"/>
   <tile id="3">
@@ -10,51 +10,74 @@
  </tileset>
  <tileset firstgid="5" name="xmap" tilewidth="32" tileheight="32" spacing="1" tilecount="6">
   <image source="xmap.png" trans="ff00ff" width="197" height="32"/>
+  <tile id="5">
+   <properties>
+    <property name="collide" value="1"/>
+   </properties>
+  </tile>
  </tileset>
- <layer name="background" width="30" height="20">
+ <layer name="background" width="40" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4B4wE4kHgWjABkQm25G09XIBtRKJ6PpahQMBgAAfE4Blw==
+   eJztzjENAAAIA7B9+HeMhJ0kpFXQBAAAAP6b60CxFAAACA==
   </data>
  </layer>
- <layer name="collide" width="30" height="20">
+ <layer name="collide_wall" width="40" height="25">
   <properties>
    <property name="collide" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4B4wEIkHgWjABkQm25G09XIBtRKJ6PpahQMBgAAuL0A6Q==
+   eJzt0DEKADAIBEGL/P/NNqkDYmGQGbhSWIwAAODl3P1KX8/mvsrtxB/09ejbJwGbnwB5
+  </data>
+ </layer>
+ <layer name="collide_ground" width="40" height="25">
+  <properties>
+   <property name="collide" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzt07ENADAIA0GK7D9zKnoSUcGd5A38EQBscIqDiar/1wcT/H63qxMdkfzj3QVHiwEh
   </data>
  </layer>
  <objectgroup name="enemy">
-  <object id="11" name="e1" x="832" y="256" width="32" height="32"/>
+  <object id="11" name="e1" x="832" y="416" width="32" height="32"/>
  </objectgroup>
- <layer name="map" width="30" height="20" visible="0">
+ <layer name="map" width="40" height="25" visible="0">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4B4wEgkHgWjABkQm25G09XIBtRKJ6RipgHCzAOER/1LHwwAnfoBow==
+   eJzt09EJADAMQsGk3X/nrOBHg2DfgQuIVgEAftBigETq/vkHErza+9Y/jimqa4qK/rL7G6EZAaM=
   </data>
  </layer>
  <objectgroup name="player">
-  <object id="1" name="player" x="64" y="416" width="32" height="32"/>
-  <object id="12" name="enemy" x="832" y="256" width="32" height="32"/>
+  <object id="1" name="player" x="64" y="576" width="32" height="32"/>
+  <object id="12" name="enemy" x="832" y="416" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="yuri">
-  <object id="3" name="yuri" x="384" y="352" width="32" height="32">
+  <object id="3" name="yuri" x="384" y="512" width="32" height="32">
    <properties>
     <property name="test" value="11111"/>
    </properties>
   </object>
-  <object id="4" name="yuri" x="640" y="352" width="32" height="32"/>
-  <object id="5" name="yuri" x="512" y="352" width="32" height="32"/>
-  <object id="6" name="yuri" x="576" y="192" width="32" height="32"/>
-  <object id="7" name="yuri" x="832" y="32" width="32" height="32"/>
+  <object id="4" name="yuri" x="640" y="512" width="32" height="32"/>
+  <object id="5" name="yuri" x="512" y="512" width="32" height="32"/>
+  <object id="6" name="yuri" x="576" y="352" width="32" height="32"/>
+  <object id="7" name="yuri" x="832" y="192" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="trap">
-  <object id="8" name="trap" x="736" y="416" width="32" height="32"/>
-  <object id="9" name="trap" x="704" y="96" width="32" height="32"/>
-  <object id="10" name="trap" x="480" y="256" width="32" height="32"/>
+  <object id="8" name="trap" x="736" y="576" width="32" height="32"/>
+  <object id="9" name="trap" x="704" y="256" width="32" height="32"/>
+  <object id="10" name="trap" x="480" y="416" width="32" height="32"/>
  </objectgroup>
- <layer name="map2" width="30" height="20">
+ <layer name="map2" width="40" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFQxVwUChPDmCDYlY8bFYa2DsKqAc4KdBLbppCTiPI6YSQGLr8KKAPAKURapUfHAzEpznkNIBMo7PxyRHSi63MYh/Fo5gGGAA6ZQWd
+   eJztlFEKwCAMQ/3pdPe/8BAUSunUUZ1F8iAoDUI+UkMAAAAwi2T0V3IVUeNO29KBE7gNb1fvBu8673tvJn2vxCKvnJYvd31WZ1Po787XfLzL9RxB7gG9zKRf83G/pahoBO3dX0I+m7QeyD92Zz5PegCJkAZv
   </data>
  </layer>
+ <objectgroup name="door">
+  <object id="17" name="door" x="448" y="576" width="32" height="32">
+   <properties>
+    <property name="key" value="1001"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="bridge">
+  <object id="18" name="bridge1" x="128" y="256" width="32" height="32"/>
+ </objectgroup>
 </map>

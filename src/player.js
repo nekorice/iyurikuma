@@ -367,9 +367,9 @@ var Player = cc.Sprite.extend({
 
     //计算前方 x 坐标范围内的物品的 x 碰撞
     //collide_x 
-    var left = Math.max(item_collide.left, left_w, tiles_collide[1].left);
-    var right = Math.min(item_collide.right, right_w, tiles_collide[1].right);
-    console.log(item_collide.left, left_w, tiles_collide[1].left);
+    var left = Math.max(item_collide.left, left_w, tiles_collide[1].left + this.boxWidth/2);
+    var right = Math.min(item_collide.right, right_w, tiles_collide[1].right - this.boxWidth/2);
+    //console.log(item_collide.left, left_w, tiles_collide[1].left);
     //dt 地板高度  最左坐标 最右坐标
     //set player now pos to move
     this.handle.pos = this.getPosition();

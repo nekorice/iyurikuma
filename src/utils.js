@@ -52,6 +52,8 @@ var TilesHelper = (function(){
       var h = tilemap.tileHeight
       var w = tilemap.tileWidth
       //添加一个计算时间可能导致的响应误差
+
+      pos.x = pos.x + w/5
       pos.y = pos.y + h/10
       
       return { x:Math.floor(pos.x/w), y:tilemap.mapHeight - Math.floor(pos.y/h)  }
@@ -65,7 +67,7 @@ var TilesHelper = (function(){
       //tilemap的坐标是左上角是0,0
       //默认值是地图下面
       var ground = tilemap.mapHeight;
-      var collidableLayer = tilemap.getLayer("collide");
+      var collidableLayer = tilemap.getLayer("collide_ground");
       
       if(pos.x >= tilemap.mapWidth){
         //cc.log(pos.x)
@@ -103,7 +105,7 @@ var TilesHelper = (function(){
       //get 当前高度 最近的一个往下最近的一个地面 加上一点计算误差
       //tilemap的坐标是左上角是0,0
       var left = 0,right = 99999;
-      var collidableLayer = tilemap.getLayer("collide");
+      var collidableLayer = tilemap.getLayer("collide_wall");
       /*
       var test = []
       for (var i = 0; i <tilemap.mapWidth; i++) {
@@ -138,11 +140,13 @@ var TilesHelper = (function(){
           break;
         } 
       };
+      //console.log(pos.x -1)
       for(var j = pos.x - 1; j >= 0; j--){
         var gid = collidableLayer.getTileGIDAt(j, pos.y);
         var proper = tilemap.getPropertiesForGID(gid);
         if(proper != undefined && proper["collide"] == 1) {
-          left = i * tilemap.tileWidth + tilemap.x;
+          //tilemap is 0 base  0 - 39
+          left = (j+1) * tilemap.tileWidth + tilemap.x;
           break;
         }               
       }  

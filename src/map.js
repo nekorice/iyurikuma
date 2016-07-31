@@ -87,11 +87,11 @@ var Map = cc.Layer.extend({
   },
   load_object:function(map, start_m){
     //map 上的地块挂接在 map 坐标上
-    //start_m 是起始的 offset, 物品都挂接在世界坐标上. start_m 最后会写入 map.x中
+    //start_m 是起始的 offset, 物品都挂接在世界坐标上. start_m 最后会写入 map.x
     //map 也是node 这样滚动map的时候可以直接对应滚动
     //enermy/food 挂载在map上
     //set up enermy
-    this._load_object(map, start_m, 'enemy', Enemy, null);
+    //this._load_object(map, start_m, 'enemy', Enemy, null);
     //set up flower
     this._load_object(map, start_m, 'yuri', Yuri, this.flowerNode);
     this._load_object(map, start_m, 'trap', Trap, this.trapNode);
