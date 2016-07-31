@@ -93,7 +93,11 @@ var TilesHelper = (function(){
       /*
         tilemap:cc.TMXTiledMap
         pos: tilemap的tile坐标
-        mark: 垂直向的 collide 和横向的 collide 要使用不同的图层属性
+
+        offset: 还需要在切换地图的时候提供offset来计算正确的坐标
+
+        mark: 垂直向的 collide_y 和横向的 collide_x 要使用不同的图层属性
+              x不能跳跃, y 可以在 wall 里面无视
               这样对于跳跃穿越  横向层 不用判断 是否用跳跃横穿了 wall
       */
       //get 当前高度 最近的一个往下最近的一个地面 加上一点计算误差
@@ -124,12 +128,13 @@ var TilesHelper = (function(){
         pos.y = 0;
       }
 
+      //0 
       //cc.log(pos.x, pos.y)
       for (var i = pos.x; i < tilemap.mapWidth; i++) {
         var gid = collidableLayer.getTileGIDAt(i, pos.y);
         var proper = tilemap.getPropertiesForGID(gid);
         if(proper != undefined && proper["collide"] == 1) {
-          right = i * tilemap.tileWidth;
+          right = i * tilemap.tileWidth + tilemap.x;
           break;
         } 
       };
@@ -137,11 +142,12 @@ var TilesHelper = (function(){
         var gid = collidableLayer.getTileGIDAt(j, pos.y);
         var proper = tilemap.getPropertiesForGID(gid);
         if(proper != undefined && proper["collide"] == 1) {
-          left = i * tilemap.tileWidth;
+          left = i * tilemap.tileWidth + tilemap.x;
           break;
         }               
-      }     
-      return {left:left, right:right}
+      }  
+
+      return {left:left , right:right }
     },
   }
 })();

@@ -211,6 +211,7 @@ var Battle = cc.LayerColor.extend({
     cc.director.end();
   },
   activeObject: function(node) {
+    //用于设置过远物体隐藏和靠近物体显示
     //初始必须设定所有 object 为 visible 为 false, 减少遍历
     //这个逻辑有点坑
     if(!node.visible){
@@ -222,7 +223,9 @@ var Battle = cc.LayerColor.extend({
     if(node.visible || force){
       node.visible = false;
       var index = this._activeNode.indexOf(node);
-      this._activeNode.splice(index, 1);
+      if(index != -1){
+        this._activeNode.splice(index, 1);
+      }
     }
   },
   collide: function() {

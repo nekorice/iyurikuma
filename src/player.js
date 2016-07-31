@@ -249,22 +249,25 @@ var Player = cc.Sprite.extend({
     //dnode.clear();
     drawRect(this.collide_rect(), dnode);
   },
-  collide_tiles:function(tiles){
-    //tiles --> tile map
+  collide_tiles:function(last_map, current_map){
+    //地图卷动  last_map <--> current_map 缝隙
     //从 tile map 里面找到当前 position 的 tiels 碰撞坐标
     //get tiles
     //-->map对象-->battlelayer
     //this.parent = map
+
     var mpos = this.parent.get_map_pos(this.getPosition())
-    var tpos = TilesHelper.getTilesPos(tiles, mpos);
+    var map = mpos.offset === true ? last_map : current_map;
+
+    var tpos = TilesHelper.getTilesPos(map, mpos.pos);
     //get到
-    var ground = TilesHelper.getGround(tiles, tpos);
+    var ground = TilesHelper.getGround(map, tpos);
 
     //jump可以往上，但是不能往下
 
 
     //掉入深坑的左右碰撞未制作 获得当前 tiles 向左最近和向右最近的 wall
-    var wall = TilesHelper.getWall(tiles, tpos);
+    var wall = TilesHelper.getWall(map, tpos);
     //debugger;
     return [ground, wall]
   },
@@ -285,7 +288,7 @@ var Player = cc.Sprite.extend({
       //移动的物体需要 update
       var node = an[i]      
       
-      if(node.type.indexOf('door') != -1 && (this.y - node.y <= -node.height )){
+      if(node.type.indexOf('door') != -1 && (this.y - node.y <= -node.height ) && node.nouse){
         if(node.x >= this.x - g_var.PIXMIN  && node.x < right){
           right = node.x;
         }
@@ -351,7 +354,7 @@ var Player = cc.Sprite.extend({
     //this.parent == maplayer
     //get 地面高度
     //不能使用current map  此函数应该放到map里面  为了实现回到旧的地图  
-    var tiles_collide = this.collide_tiles(this.parent.current_map);
+    var tiles_collide = this.collide_tiles(this.parent.last_map, this.parent.current_map);
     var ground_hight = tiles_collide[0]
     //collide_y
     ground_hight = Math.max(ground_hight, item_collide.bottom);
@@ -359,17 +362,20 @@ var Player = cc.Sprite.extend({
     //防止超过两端  屏幕绝对坐标 变化的是 this.parent.x 的坐标
     //原本地形的 collid 没有计算
     //var wall = this.collide_wall(this.parent.current_map);
-    var left = -this.parent.x + this.boxWidth;
-    var right = -this.parent.x + this.parent.swidth;
+    var left_w = -this.parent.x + this.boxWidth;
+    var right_w = -this.parent.x + this.parent.swidth;
 
     //计算前方 x 坐标范围内的物品的 x 碰撞
     //collide_x 
-    left = Math.max(item_collide.left, left, tiles_collide[1].left);
-    right = Math.min(item_collide.right, right, tiles_collide[1].right);
-
+    var left = Math.max(item_collide.left, left_w, tiles_collide[1].left);
+    var right = Math.min(item_collide.right, right_w, tiles_collide[1].right);
+    console.log(item_collide.left, left_w, tiles_collide[1].left);
     //dt 地板高度  最左坐标 最右坐标
+    //set player now pos to move
+    this.handle.pos = this.getPosition();
     var pos = this.handle.move(dt, ground_hight, left, right);
     this.setPosition(pos);
+
     //update position
     this.last_position = pos; 
 

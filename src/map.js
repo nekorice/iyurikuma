@@ -69,7 +69,8 @@ var Map = cc.Layer.extend({
     };
     
     cc.log(this.map_list);
-    this.current_map = this.map_list[0]
+    this.current_map = this.map_list[0];
+    this.last_map = this.map_list[0];
     //this.tileMap = cc.TMXTiledMap.create(res.map);
 
     
@@ -85,6 +86,8 @@ var Map = cc.Layer.extend({
     
   },
   load_object:function(map, start_m){
+    //map 上的地块挂接在 map 坐标上
+    //start_m 是起始的 offset, 物品都挂接在世界坐标上. start_m 最后会写入 map.x中
     //map 也是node 这样滚动map的时候可以直接对应滚动
     //enermy/food 挂载在map上
     //set up enermy
@@ -127,16 +130,20 @@ var Map = cc.Layer.extend({
     //cc.log(this.current_map.x);
     
     var bx = ipos.x - this.current_map.x;
+    var offset = false;
     if(bx < 0){
       //还在上一幅图
       bx = ipos.x
+      offset = true;
     }
-    return cc.p(bx, ipos.y)
+
+    return { 'pos':cc.p(bx, ipos.y), 'offset':offset }
   },
   switch_next:function(){
     //
     this.map_index ++;
     if(this.map_index < this.map_list.length){
+      this.last_map = this.current_map;
       this.current_map = this.map_list[this.map_index];
       return true
     }
@@ -238,7 +245,7 @@ var Map = cc.Layer.extend({
     //分帧检查数组
     for (var i = this._lastCheck[key]; (i < entity.length && j <= everyFrame); i++) {
       var yu = entity[i]
-      if(yu.calc_visible(this.player.x)){
+      if(yu.calc_visible(this.player.x) && !yu.nouse){
         this.parent.activeObject(yu);
       }else{
         this.parent.unactiveObject(yu);

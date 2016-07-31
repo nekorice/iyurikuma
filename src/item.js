@@ -5,12 +5,30 @@
     license: MIT
 */
 
+//require(move.js)
+//this is all object in tilemap
+//read from tilemap
+//loading the data
+
 //cc.SpriteBatchNode
 var Item = cc.Sprite.extend({
-  nouse:false,
-  moveable:false,
+  type:"item",
   ctor:function (png) {
     this._super(png);
+     this.nouse = false;
+     this.moveable = false;
+  },
+  init_base:function(tileObject, offset){
+    cc.log('init '+this.type);
+    this.x = tileObject['x'] + offset;
+    this.y = tileObject['y'];
+    this.bwidth = tileObject['width'];
+    this.bheight = tileObject['height'];
+    
+    //锚点设置为左上角
+    this.setAnchorPoint(0, 0);
+    //默认 visible = false 来添加到界面
+    this.visible = false;    
   },
   collide_rect: function(x) {
     return new Rect(this.x, this.y, this.width * this.scale, this.height * this.scale);
@@ -47,7 +65,6 @@ var Item = cc.Sprite.extend({
 
 
 var Yuri = Item.extend({
-  nouse:false,
   type:'yuri',
   ctor:function (tileObject, offset) {
     //init img
@@ -56,18 +73,9 @@ var Yuri = Item.extend({
     this.init(tileObject, offset);
   },
   init:function(tileObject, offset){
-    cc.log('init yuri');
-    this.x = tileObject['x'] + offset;
-    this.y = tileObject['y'];
-    this.bwidth = tileObject['width'];
-    this.bheight = tileObject['height'];
-    
-    //锚点设置为左上角
-    this.setAnchorPoint(0, 0);
+
     this.scale = 0.2;
-    //默认 visible = false 来添加到界面
-    this.visible = false;
-     
+    this.init_base(tileObject, offset); 
   },
 });
 
@@ -80,16 +88,8 @@ var Trap = Item.extend({
     this.init(tileObject, offset);
   },
   init:function(tileObject, offset){
-    cc.log('init trap');
-    this.x = tileObject['x'] + offset;
-    this.y = tileObject['y'];
-    this.bwidth = tileObject['width'];
-    this.bheight = tileObject['height'];
-
-    this.setAnchorPoint(0, 0.1);
+    this.init_base(tileObject, offset); 
     this.scale = 0.3;
-    this.visible = false;
-
   },  
 }) 
 
@@ -102,22 +102,21 @@ var Bridge = Item.extend({
       this.init(tileObject, offset);
     },
     init:function(tileObject, offset){
-      cc.log('init bridge');
-      this.x = tileObject['x'] + offset;
-      this.y = tileObject['y'];
-      
-      tileObject
-      this.bwidth = tileObject['width'];
-      this.bheight = tileObject['height'];
-
-      this.setAnchorPoint(0, 0.1);
+      this.init_base(tileObject, offset);
       this.scale = 0.3;
-      this.visible = false;
-
+      this.mover = PathMoveFactory(tileObject['move_tp']);
+      this.passenger = [];
+    },
+    attachObject: function(player){
+      //叠加当前的移动到player身上
+      //接受对应的bridge 发来的move消息。
     },
     update: function(dt) {
+      var last = this.position;
+      this.postion = this.mover.move()
 
-  },    
+      //emiiter --> this.position - last
+    },    
 })
 
 var Door = Item.extend({
@@ -129,27 +128,41 @@ var Door = Item.extend({
       this.init(tileObject, offset);
   },
   init:function(tileObject, offset){
-    cc.log('init bridge');
-    this.x = tileObject['x'] + offset;
-    this.y = tileObject['y'];
-    this.bwidth = tileObject['width'];
-    this.bheight = tileObject['height'];
-
-    this.setAnchorPoint(0, 0.1);
-    //this.scale = 0.3;
-    this.visible = false;
+    this.init_base(tileObject, offset);
+    
     this.isopen = false;
-
     //直接配置在地图上
     this.key = tileObject['key'];
     //add event listen
     //g_var.Emitter.addListener()
-
+  },
+  open_door:function(key){
+    
+    if(key == this.key){
+      //
+      this.isopen = true;
+      this.nouse = true;
+      //切换到开门的png
+    }
   },
   update: function(dt) {
     //this.move 
     //按照设定的路线
-
-
   },    
 })
+
+//静物可以通用一个类
+var Key = Item.extend({
+  type:'key',
+  ctor:function (tileObject, offset) {
+    //init img
+    this._super(res.flower);
+    this.init(tileObject, offset);
+  },
+  init:function(tileObject, offset){
+
+    this.init_base(tileObject, offset);
+    this.key = tileObject['key'];
+
+  },
+});
