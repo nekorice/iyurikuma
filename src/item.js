@@ -134,16 +134,26 @@ var Door = Item.extend({
     //直接配置在地图上
     this.key = tileObject['key'];
     //add event listen
-    //g_var.Emitter.addListener()
+    //g_var.emitter.addListener('open_door', this.open_door);
+    this.bind_open_door();
   },
-  open_door:function(key){
+  bind_open_door:function(){
     
-    if(key == this.key){
-      //
-      this.isopen = true;
-      this.nouse = true;
-      //切换到开门的png
-    }
+    //使用闭包来实现  防止apply 针对 listen 使用非this 调用
+    var dkey = this.key;
+    var self = this;
+
+    g_var.emitter.addListener('open_door', function (key){
+      cc.log("that fires")
+      if(key == dkey){
+        self.isopen = true;
+        self.nouse = true;
+        //切换到开门的png
+        //self.destroy();
+                
+      }
+    });
+
   },
   update: function(dt) {
     //this.move 
@@ -167,6 +177,7 @@ var Key = Item.extend({
 
   },
   use:function(){
-    
+    cc.log('emitter open_door')
+    g_var.emitter.emit('open_door', this.key)
   },
 });

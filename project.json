@@ -11,6 +11,7 @@
     "modules" : ["cocos2d", "extensions"],
 
     "jsList" : [
+        "src/lib/EventEmitter.js",
 
         "src/basic.js",
         "src/utils.js",

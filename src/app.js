@@ -48,7 +48,8 @@ var Battle = cc.LayerColor.extend({
     g_var['bulletpoll_p'] = new BulletPool();
 
     g_var['ani_mana'] = new AnimateManager();
-    //g_var['emitter'] = new EventEmitter();
+    g_var['emitter'] = new EventEmitter();
+    //g_var['emitter'].setMaxListeners(30);
 
     //如果addChild undefined 就会报错 already add
     //Map

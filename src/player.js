@@ -380,7 +380,7 @@ var Player = cc.Sprite.extend({
     var left = Math.max(item_collide.left + this.boxWidth/2, left_w, tiles_collide[1].left + this.boxWidth/2);
     var right = Math.min(item_collide.right - this.boxWidth/2, right_w, tiles_collide[1].right - this.boxWidth/2);
     //console.log(item_collide.left, left_w, tiles_collide[1].left);
-    console.log(right)
+    
     //dt 地板高度  最左坐标 最右坐标
     //set player now pos to move
     this.handle.pos = this.getPosition();
