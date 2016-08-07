@@ -212,7 +212,11 @@ var Player = cc.Sprite.extend({
           //jump
           console.log('jump')
           this.handle.dojump();
-          g_var.emitter.emit('downBridge', this);
+          //if jump  碰撞的判断不对
+          if(this.onboard){
+            this.onboard = false;
+            g_var.emitter.emit('downBridge', this);            
+          }
           break;
       }
 
@@ -300,10 +304,13 @@ var Player = cc.Sprite.extend({
       }
 
       if(node.type.indexOf('bridge') != -1 && this.x > node.x &&(this.x - node.x - this.boxWidth/2 <= node.width)){
-        if(node.y <= this.y + node.bheight - g_var.PIXMIN && node.y > bottom){
+        if(node.y <= this.y + node.bheight && node.y > bottom){
           bottom = node.y + node.bheight;
-        }else{
-         
+          if(!this.onboard){
+            cc.log('goBridge');
+            node.attachObject(this);
+            this.onboard = true;          
+          }
         }
       }
 
@@ -354,17 +361,18 @@ var Player = cc.Sprite.extend({
       node.destroy();
       return true;
     }else if(node.type == 'bridge'){
-      cc.log('goBridge');
-      node.attachObject(this);
-      this.onboard = true;
+
       return false;
     }
     return false;
   },
   moveSpecial: function(x, y) {
     //直接外力移动当前 objcet
-    this.x += x;
-    this.y += y;
+    //目前只有 idle 才会
+    if(this.fsm.state == 'idle'){
+      this.x += x;
+      this.y += y;      
+    }
   },
   update:function(dt){
 

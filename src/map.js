@@ -15,8 +15,8 @@ var Map = cc.Layer.extend({
   chapter_end:false,
   //collide object  auto add
   loading_object_names:[],
-  _lastCheck:{'yuri':0, 'enemy':0, 'trap':0, 'door':0, 'key':0 },
-  entity:{'yuri':[], 'enemy':[], 'trap':[], 'door':[], 'key':[] },
+  _lastCheck:{},
+  entity:{ 'enemy':[]},
   ctor:function (swidth) {
     this._super();
     this.init(swidth);
