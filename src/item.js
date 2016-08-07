@@ -103,19 +103,38 @@ var Bridge = Item.extend({
     },
     init:function(tileObject, offset){
       this.init_base(tileObject, offset);
-      this.scale = 0.3;
-      this.mover = PathMoveFactory(tileObject['move_tp']);
+      this.scale = 1;
+      this.speed = 60;
+      this.mover = PathMoveFactory(this.getPosition(), this.speed, tileObject['move_tp']);
       this.passenger = [];
+      var self = this;
+      g_var.emitter.addListener('downBridge', function(p){
+        if(self.visible){
+          self.downObject(p);
+        }     
+      })
     },
     attachObject: function(player){
-      //叠加当前的移动到player身上
-      //接受对应的bridge 发来的move消息。
+      //要求 player 有 move Specail方法 
+      //不使用 event 主要监听效率不高
+      this.passenger.push(player);
+    },
+    downObject: function(player){
+      var index = this.passenger.indexOf(player);
+      if(index != -1){
+        this.passenger.splice(index, 1);
+      } 
+    },
+    movePassenger: function(x, y){
+      for (var i = this.passenger.length - 1; i >= 0; i--) {
+        this.passenger[i].moveSpecial(x, y)
+      };
     },
     update: function(dt) {
-      var last = this.position;
-      this.postion = this.mover.move()
-
-      //emiiter --> this.position - last
+      var last = this.getPosition();
+      var position = this.mover.move(dt);
+      this.setPosition(position);
+      this.movePassenger(this.x - last.x, this.y - last.y);
     },    
 })
 
@@ -149,8 +168,10 @@ var Door = Item.extend({
         self.isopen = true;
         self.nouse = true;
         //切换到开门的png
-        //self.destroy();
-                
+        self.destroy();
+        //self.initWithSpriteFrameName('fire1.png')
+        //var spriteFrame = cc.spriteFrameCache.getSpriteFrame("grossini_dance_01.png");
+        //setDisplayFrame() initWithSpriteFrameName()        
       }
     });
 

@@ -103,6 +103,7 @@ var Map = cc.Layer.extend({
     this._load_object(map, start_m, 'trap', Trap, this.trapNode);
     this._load_object(map, start_m, 'door', Door, this.doorNode);
     this._load_object(map, start_m, 'key', Key, null);
+    this._load_object(map, start_m, 'bridge', Bridge, null);
     //set up trap
 
   },
@@ -111,9 +112,11 @@ var Map = cc.Layer.extend({
       cc.log(group_name + 'is not found in map load object')
       return
     }
+
     if(this.entity[group_name] === undefined){
       this.entity[group_name] = [];
       this._lastCheck[group_name] = 0;
+      this.loading_object_names.push(group_name);
     }
 
     var obs = map.getObjectGroup(group_name).getObjects();
@@ -240,11 +243,15 @@ var Map = cc.Layer.extend({
   checkVisual:function() {
     //检查是否可见，在可见范围内的node都加入到app.js里的activeObject
     //进行碰撞判断
+    for (var i = this.loading_object_names.length - 1; i >= 0; i--) {
+      this._check_visual(this.loading_object_names[i]);
+    };
+    /*
     this._check_visual('enemy');
     this._check_visual('yuri');
     this._check_visual('trap');
     this._check_visual('door');
-    this._check_visual('key');
+    this._check_visual('key');*/
   },
   _check_visual:function(key) {
     //every frame check 10

@@ -221,12 +221,40 @@ StaticMove = ClassicMove.extend({
 
 })
 
+
 PathMove = StaticMove.extend({
   //物体 按照一条路径移动
   //给定一个函数队列
   //输入当前x,y, 符合条件 a,  输出当前的速度方向vector
   //不断的执行
+  init:function(pos, speed, path){
+    this._super(pos, speed);
+    this.path = path;
+    this.origin = pos;
+    this.doPath(path);
+  },
+  doPath: function(p){
+    
+    //patrol
+    this.op = this.patrol;
+    var startX = this.origin.x;
+    var endX = this.origin.x + 200;
+    this.pathArgs = [startX, endX];
+  },
+  move: function(dt){
+    
+    this.op.apply(this, this.pathArgs);
+    this.pos.x = this.pos.x + this.speed * dt
+    this.pos.y = this.pos.y + this.speed_y * dt
 
-
+    return this.pos;
+  },
 });
+
+PathMoveFactory = function(pos, speed, tp) {
+  var path_dict = {}
+
+  return new PathMove(pos, speed, 'patrol')
+
+}
 

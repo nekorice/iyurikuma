@@ -28,6 +28,7 @@ var res = {
     //bgm:'res/music/TERRITORY.mp3',
 
     //texture
+    bridge:'res/ui/bridge.png',
     flower:'res/ui/yuri.png',
     trap:'res/ui/trap.png',
     door:'res/ui/door.png',
@@ -66,7 +67,7 @@ var g_var = {
   'horizon': 192,
   //重力
   'gravity': 20,
-  'PIXMIN': 10,
+  'PIXMIN': 5,
   'DEBUG': true,
   'MAP_ROLLING_SPACE': 300,
   'MAP_SKY_SPACE': 200,
